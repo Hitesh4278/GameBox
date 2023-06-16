@@ -9,9 +9,9 @@ export const NavBar = ({ isLoggedIn, handleLogout, email }) => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px' }}>
+      <nav className="navbar navbar-expand-lg navbar-light bg-dark " style={{ height: '80px' }}>
         <a className="navbar-brand text-white" style={{ fontSize: '30px' }} href="/">
-          Project
+         Home
         </a>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
