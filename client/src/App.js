@@ -4,6 +4,7 @@ import { SignUp } from './components/SignUp';
 import { Login } from './components/Login';
 import { Home } from './components/Home';
 import { GamePage} from './components/GamePage';
+import { ReviewPage } from './components/ReviewPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/gamepage/:gameId" element={<GamePage />} />
+          <Route path="/reviewPage" element={<ReviewPage/>}/> 
         </Routes>
       </div>
     </Router>

@@ -48,8 +48,7 @@ export const Home = () => {
         <NavBar />
       </div>
       <div style={{ marginTop: '5px' }}>
-        <nav className="navbar text-white bg-dark justify-content-center">
-          <a className="navbar-brand" href='/gamepage'>GamePage</a>
+        <nav className="navbar text-white  justify-content-center">
           <form className="form-inline ml-auto">
             <input
               className="form-control mr-sm-2"

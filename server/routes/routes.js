@@ -43,6 +43,33 @@ router.post('/login', async (req, res) => {
     }
 })
 
+router.post('/reviewPage', async(req,res)=>{
+
+    try {
+        const {userId,reviewText}=req.body;
+
+        const user=await User.findById(userId);
+
+        if(!user)
+        {
+            return res.status(404).json({success:false,message:'User not Found'})
+        }
+
+        const newReview=new Review({
+            user:user._id,
+            reviewText
+        })
+
+        await newReview.save();
+
+        res.json({success:true, message:"Review Added SuccessFully"})
+    } catch (error) {
+     console.log(error); 
+    res.status(500).json({ success: false, message: 'Internal server error' });
+        
+    }
+})
+
 
 
 

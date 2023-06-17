@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavBar } from './NavBar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const apiKey = 'd9ac06863b3b40bfb04b86694f77e46c';
 
@@ -29,7 +30,7 @@ export const GamePage = () => {
       .get(screenShotUrl)
       .then(response => {
         setScreenShots(response.data.results);
-        console.log(response.data.results);
+        // console.log(response.data.results);
 
       })
       .catch(error => {
@@ -107,8 +108,12 @@ export const GamePage = () => {
           </ul>
 
           <p>For More Info: <span><a href={game.website}>Click</a></span></p>
+          
+          <h4>Add A Review</h4> <span> <Link to='/reviewPage'>Click Here</Link> </span>
+
         </div>
-        <div style={{ marginRight: '10px' }}>ScreenShot</div>
+        
+       
       </div>
     </>
   );

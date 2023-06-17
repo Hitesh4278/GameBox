@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { NavBar } from './NavBar';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,20 +24,15 @@ export const Login = () => {
     axios(config)
       .then((result) => {
         setIsLoggedIn(true);
-        navigate('/');
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
-
   return (
     <div>
-      <NavBar isLoggedIn={isLoggedIn} email={email} handleLogout={handleLogout} />
+      <NavBar isLoggedIn={isLoggedIn} email={email} />
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
@@ -50,13 +46,13 @@ export const Login = () => {
               placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{ width: '500px' }} 
+              style={{ width: '500px' }}
             />
           </div>
           <div className="form-group">
             <label htmlFor="exampleInputPassword1">Password</label>
             <input
-              type="password"
+              type="text"
               className="form-control"
               id="exampleInputPassword1"
               placeholder="Password"
@@ -64,9 +60,14 @@ export const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit" className="btn btn-outline-danger">
+          <button type="submit" className="btn btn-outline-danger " style={{ marginRight: '10px' }}>
             Submit
           </button>
+          <Link to="/signup">
+            <span>
+              <button className="btn btn-outline-danger">New User</button>
+            </span>
+          </Link>
           {isLoggedIn ? (
             <p className="text-danger">You are logged in successfully.</p>
           ) : (
