@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Review=require('../models/Review')
 
 router.post('/signup', async (req, res) => {
     try {
@@ -43,33 +44,32 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/reviewPage', async(req,res)=>{
-
+router.post('/reviewPage/:gameId', async (req, res) => {
     try {
-        const {userId,reviewText}=req.body;
+      const { email, reviewText,gameId } = req.body;
+  
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+  
+      const newReview = new Review({
+        user: user._id,
+        reviewText: reviewText,
+        gameId:gameId
 
-        const user=await User.findById(userId);
-
-        if(!user)
-        {
-            return res.status(404).json({success:false,message:'User not Found'})
-        }
-
-        const newReview=new Review({
-            user:user._id,
-            reviewText
-        })
-
-        await newReview.save();
-
-        res.json({success:true, message:"Review Added SuccessFully"})
+      });
+  
+      await newReview.save();
+  
+      res.json({ success: true, message: 'Review added successfully' });
     } catch (error) {
-     console.log(error); 
-    res.status(500).json({ success: false, message: 'Internal server error' });
-        
+      console.log(error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
-})
-
+  });
+  
 
 
 

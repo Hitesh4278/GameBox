@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-export const NavBar = ({ isLoggedIn, email }) => {
+export const NavBar = ({ authent }) => {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('authenticated');
+    setAuthenticated(!!loggedInUser);
+    setEmail(localStorage.getItem('email'));
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('authenticated');
+    localStorage.removeItem('email');
+    setAuthenticated(false);
+    setEmail('');
+    alert('Logged Out');
+  };
+
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-dark " style={{ height: '80px' }}>
+      <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px' }}>
         <a className="navbar-brand text-white" style={{ fontSize: '30px' }} href="/">
           Home
         </a>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
-            {isLoggedIn ? (
-              <li className="nav-item">
-                <span className="nav-link text-white">{email}</span>
+            {authenticated ? (
+              <li className=" d-flex ">
+                <span >
+                  <p className="text-white mr-2 "  style={{marginTop:'15px'}}>{email}</p>
+                </span>
+                <button className="btn btn-dark" onClick={handleLogout}>
+                  Logout
+                </button>
               </li>
             ) : (
               <>

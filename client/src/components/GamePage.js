@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+
 const apiKey = 'd9ac06863b3b40bfb04b86694f77e46c';
 
 export const GamePage = () => {
@@ -19,6 +20,7 @@ export const GamePage = () => {
       .get(url)
       .then(response => {
         setGame(response.data);
+        // console.log(response.data)
       })
       .catch(error => {
         console.error(error);
@@ -106,10 +108,11 @@ export const GamePage = () => {
               }
             })}
           </ul>
+          <h3>Reviews :</h3>
 
           <p>For More Info: <span><a href={game.website}>Click</a></span></p>
           
-          <h4>Add A Review</h4> <span> <Link to='/reviewPage'>Click Here</Link> </span>
+          <h4>Add A Review</h4> <span> <Link to={`/reviewPage/${gameId}`}>Click Here</Link> </span>
 
         </div>
         

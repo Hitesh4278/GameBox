@@ -8,7 +8,7 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = useState(localStorage.getItem('authenticated') === 'true');  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,6 +24,12 @@ export const Login = () => {
     axios(config)
       .then((result) => {
         setIsLoggedIn(true);
+        alert("Login SuccessFull")
+       
+        setAuthenticated(true);
+        localStorage.setItem('authenticated', true);
+        localStorage.setItem('email', email);
+        navigate('/');
       })
       .catch((error) => {
         console.log(error);
@@ -32,7 +38,7 @@ export const Login = () => {
 
   return (
     <div>
-      <NavBar isLoggedIn={isLoggedIn} email={email} />
+      <NavBar authent={authenticated}/>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
@@ -52,7 +58,7 @@ export const Login = () => {
           <div className="form-group">
             <label htmlFor="exampleInputPassword1">Password</label>
             <input
-              type="text"
+              type="password"
               className="form-control"
               id="exampleInputPassword1"
               placeholder="Password"
@@ -64,9 +70,7 @@ export const Login = () => {
             Submit
           </button>
           <Link to="/signup">
-            <span>
-              <button className="btn btn-outline-danger">New User</button>
-            </span>
+            <button className="btn btn-outline-danger">New User</button>
           </Link>
           {isLoggedIn ? (
             <p className="text-danger">You are logged in successfully.</p>

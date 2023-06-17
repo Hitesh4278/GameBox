@@ -15,7 +15,7 @@ export const Home = () => {
       .get(url)
       .then(response => {
         setGames(response.data.results);
-        console.log(response.data.results)
+        // console.log(response.data.results)
       })
       .catch(error => {
         console.error(error);

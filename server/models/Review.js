@@ -12,6 +12,10 @@ const ReviewSchema= new Schema({
         type: String,
         required: true
       },
+      gameId:{
+          type:Number,
+          required:true
+      },
       createdAt: {
         type: Date,
         default: Date.now
