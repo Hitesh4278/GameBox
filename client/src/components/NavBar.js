@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const NavBar = ({ authent }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
+  const navigate=useNavigate()
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('authenticated');
@@ -17,13 +19,25 @@ export const NavBar = ({ authent }) => {
     setEmail('');
     alert('Logged Out');
   };
+  
+  const handleSignUp=()=>{
+    navigate('/signup')
+  }
+  
+  const handleLogin=()=>{
+    navigate('/login')
+  }
+
+  const handleHome=()=>{
+    navigate('/')
+  }
 
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px' }}>
-        <a className="navbar-brand text-white" style={{ fontSize: '30px' }} href="/">
+        <button className="btn btn-dark" style={{ fontSize: '30px' }} onClick={handleHome} >
           Home
-        </a>
+        </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             {authenticated ? (
@@ -38,14 +52,14 @@ export const NavBar = ({ authent }) => {
             ) : (
               <>
                 <li className="nav-item">
-                  <a className="nav-link text-white" href="/signup">
+                  <button className="btn btn-dark" onClick={handleSignUp}>
                     SignUp
-                  </a>
+                  </button>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-white" href="/login">
+                  <button className="btn btn-dark" onClick={handleLogin}>
                     Login
-                  </a>
+                  </button>
                 </li>
               </>
             )}

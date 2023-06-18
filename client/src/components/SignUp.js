@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { NavBar } from './NavBar';
+import '../Css/SignUp.css'
 
 export const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -32,23 +33,23 @@ export const SignUp = () => {
   return (
     <div>
       <NavBar />
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop:'10px' }}>
-      <h2>Sign Up</h2>
+    <div className='signUpDiv' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <h2 style={{marginTop:'100px'}}>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="exampleInputEmail1">Email address</label>
+          <label htmlFor="exampleInputEmail1" style={{fontWeight:'bold' }}>Email address</label>
           <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: '500px' }} />
         </div>
         <div className="form-group">
-          <label htmlFor="exampleInputPassword1">Password</label>
+          <label htmlFor="exampleInputPassword1" style={{fontWeight:'bold' }}>Password</label>
           <input type="text" className="form-control" id="exampleInputPassword1" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-        <button type="submit" className="btn btn-outline-danger" onClick={handleSubmit}>Submit</button>
-        {register ? (
-          <p className="text-success">You Are Registered Successfully</p>
+        <button type="submit" className="btn btn-danger" onClick={handleSubmit}>Submit</button>
+        {/* {register ? (
+          <p className="text-success" style={{fontWeight:'bold'}}>You Are Registered Successfully</p>
         ) : (
           <p className="text-danger">You Are Not Registered</p>
-        )}
+        )} */}
       </form>
     </div>
     </div>

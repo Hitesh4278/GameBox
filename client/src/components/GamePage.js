@@ -32,7 +32,7 @@ export const GamePage = () => {
       .get(screenShotUrl)
       .then(response => {
         setScreenShots(response.data.results);
-        // console.log(response.data.results);
+        console.log(response.data.results);
 
       })
       .catch(error => {

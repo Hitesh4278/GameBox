@@ -18,7 +18,9 @@ export const ReviewPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!authenticated) {
-      console.log('User not authenticated');
+
+      // console.log('User not authenticated');
+      alert("Please! Login First");
       return;
     }
 
