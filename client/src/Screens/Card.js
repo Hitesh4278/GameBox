@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../Css/Card.css';
 
 export const Card = ({ game }) => {
   const GameId = game.id;
   return (
     <div className="col-sm-4 mb-3">
-      <div className="card" style={{ height: '25rem', width: '400px', marginTop: '15px', marginLeft: '10px' }}>
+      <div className="card">
         <img
           src={game.background_image}
           className="card-img-top"
@@ -13,11 +14,10 @@ export const Card = ({ game }) => {
         />
         <div className="card-body">
           <h5 className="card-title">{game.name}</h5>
-          <p className="card-text">
-            Rating: {game.rating} <br />
-            Release: {game.released} <br />
-            Category: {game.category} <br />
-            GamesCategory: <Link to={`/gamepage/${GameId}`}>Click Here</Link> 
+          <p className="card-text"> {/* Add card-text class here */}
+            Rating: <span className="rating">{game.rating}</span> <br />
+            Release: <span className="release-date">{game.released}</span> <br />
+            For More: <button><Link to={`/gamepage/${GameId}`}>Click Here</Link> </button> 
           </p>
         </div>
       </div>

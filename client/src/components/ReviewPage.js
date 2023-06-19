@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { NavBar } from './NavBar';
 import axios from 'axios';
-import {useParams} from 'react-router-dom'
+import { useParams } from 'react-router-dom';
+import '../Css/ReviewPage.css';
 
 export const ReviewPage = () => {
   const [review, setReview] = useState('');
   const [email, setEmail] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
-  const {gameId}=useParams();
+  const { gameId } = useParams();
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('authenticated');
@@ -18,17 +19,15 @@ export const ReviewPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!authenticated) {
-
-      // console.log('User not authenticated');
-      alert("Please! Login First");
+      alert('Please log in first.');
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/reviewPage/:gameId', {
+      const response = await axios.post(`http://localhost:8000/reviewPage/${gameId}`, {
         reviewText: review,
         email: email,
-        gameId:gameId,
+        gameId: gameId,
       });
 
       // Handle the response as needed
@@ -45,20 +44,23 @@ export const ReviewPage = () => {
   return (
     <div>
       <NavBar />
-      <h2 className='text-center'>Review Your Game</h2>
-      <div className="review-form-container" style={{ textAlign: 'center' }}>
-        <div className="review-form">
-          <textarea
-            value={review}
-            placeholder="Write your review..."
-            rows={4}
-            cols={50}
-            onChange={(e) => setReview(e.target.value)}
-          />
+      <div className="container">
+        <h2 className="title">Review Your Game</h2>
+        <div className="review-form-container form-container">
+          <div className="review-form">
+            <textarea
+              value={review}
+              placeholder="Write your review..."
+              rows={4}
+              cols={50}
+              onChange={(e) => setReview(e.target.value)}
+              className="textarea"
+            />
+          </div>
+          <button className="bg-light btn-outline-dark submit-button" onClick={handleSubmit}>
+            Submit Review
+          </button>
         </div>
-        <button className="bg-light btn-outline-dark" onClick={handleSubmit}>
-          Submit Review
-        </button>
       </div>
     </div>
   );

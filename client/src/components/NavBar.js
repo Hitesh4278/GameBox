@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import '../Css/NavBar.css'
 export const NavBar = ({ authent }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
@@ -34,16 +34,16 @@ export const NavBar = ({ authent }) => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px' }}>
-        <button className="btn btn-dark" style={{ fontSize: '30px' }} onClick={handleHome} >
+      <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px',minWidth:'100%' }}>
+        <button className="btn btn-dark" style={{ fontSize: '30px' }} onClick={handleHome}>
           Home
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             {authenticated ? (
-              <li className=" d-flex ">
-                <span >
-                  <p className="text-white mr-2 "  style={{marginTop:'15px'}}>{email}</p>
+              <li className=" d-flex">
+                <span>
+                  <p className="text-white mr-2" style={{marginTop:'15px'}}>{email}</p>
                 </span>
                 <button className="btn btn-dark" onClick={handleLogout}>
                   Logout
