@@ -10,16 +10,18 @@ const apiKey = 'd9ac06863b3b40bfb04b86694f77e46c';
 export const GamePage = () => {
   const [game, setGame] = useState({});
   const [screenShots, setScreenShots] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const { gameId } = useParams();
   const url = `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
   const screenShotUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${apiKey}`;
+  const reviewsUrl = `http://localhost:8000/reviews/${gameId}`;
 
   const getGame = () => {
     axios
       .get(url)
       .then(response => {
         setGame(response.data);
-        console.log(response.data)
+        // console.log(response.data)
       })
       .catch(error => {
         console.error(error);
@@ -37,9 +39,22 @@ export const GamePage = () => {
       });
   };
 
+  const getReviews = () => {
+    axios
+      .get(reviewsUrl)
+      .then(response => {
+        setReviews(response.data);
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
   useEffect(() => {
     getGame();
     getScreenShots();
+    getReviews();
   }, [gameId]);
 
   return (
@@ -47,7 +62,7 @@ export const GamePage = () => {
       <NavBar />
       <div className='d-flex justify-content-between '>
         <div className='game-info' style={{ marginLeft: '10px' }}>
-          <h3 style={{marginTop:'2px'}}>Game Info :</h3>
+          <h3 style={{ marginTop: '2px' }}>Game Info :</h3>
           <p><strong>Name : </strong>{game.name}</p>
           <img
             src={game.background_image}
@@ -108,7 +123,23 @@ export const GamePage = () => {
               }
             })}
           </ul>
-          <h3>Reviews :</h3>
+          <div className="review-section">
+            <h3>Reviews:</h3>
+            {reviews.length > 0 ? (
+              <ol className="review-list">
+                {reviews.map((review, index) => (
+                  <li key={review.gameId} className="review-item">
+                    <p>
+                      <span className="review-number">{index + 1}.</span>
+                      {review.reviewText}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="no-reviews">No reviews available.</p>
+            )}
+          </div>
           <p> <strong>For More Info:</strong> <span className='review-link'><a href={game.website}>Click Here</a></span></p>
           <p>
             <span><strong>Add A Review:</strong> </span>

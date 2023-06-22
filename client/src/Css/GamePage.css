@@ -172,3 +172,28 @@
     font-family: Arial, sans-serif;
     margin-bottom: 20px;
 }
+
+
+.review-section {
+    margin-top: 10px;
+  }
+  
+  .review-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .review-item {
+    background-color: #f5f5f5;
+    border-radius: 5px;
+  }
+
+  .review-number {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .no-reviews {
+    color: #777;
+  }
+  

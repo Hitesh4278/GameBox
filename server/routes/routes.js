@@ -69,6 +69,19 @@ router.post('/reviewPage/:gameId', async (req, res) => {
       res.status(500).json({ success: false, message: 'Internal server error' });
     }
   });
+
+  router.get('/reviews/:gameId', async (req, res) => {
+    const { gameId } = req.params;
+  
+    try {
+      const reviews = await Review.find({ gameId });
+      res.json(reviews);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching reviews' });
+    }
+  });
+  
   
 
 
