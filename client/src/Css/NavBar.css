@@ -1,37 +1,104 @@
 .navbar {
-    background-color: #333333;
-    color: #ffffff;
-    padding: 10px 20px;
+  background-color: #333333;
+  color: #ffffff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar button {
+  font-size: 16px;
+  padding: 8px 16px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navbar button:hover {
+  background-color: #777777;
+}
+
+.navbar p {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.navbar .navbar-nav {
+  align-items: center;
+}
+
+.navbar .navbar-nav li {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .navbar-nav li:last-child {
+  margin-left: auto;
+}
+
+
+/* For small devices */
+@media (max-width: 576px) {
+  .navbar {
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
+
+  .navbar .navbar-nav {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .navbar .navbar-nav li:last-child {
+    margin-left: 0;
+  }
+
+  .navbar button {
+    font-size: 14px;
+    padding: 6px 12px;
+    margin-right: 5px;
+  }
+
+  .navbar p {
+    font-size: 14px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+}
+/* For medium devices */
+@media (min-width: 576px) and (max-width: 992px) {
+  .navbar {
+    padding: 15px;
+  }
+
+  .navbar button {
+    font-size: 15px;
+    padding: 7px 14px;
+    margin-right: 8px;
+  }
+
+  .navbar p {
+    font-size: 15px;
+    margin-right: 8px;
+  }
+}
+
+/* For large devices and above */
+@media (min-width: 992px) {
+  .navbar {
+    padding: 40px;
+  }
+
   .navbar button {
     font-size: 16px;
     padding: 8px 16px;
     margin-right: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
   }
-  
-  .navbar button:hover {
-    background-color: #777777;
-  }
-  
+
   .navbar p {
     font-size: 16px;
     margin-right: 10px;
   }
-  
-  .navbar .navbar-nav {
-    align-items: center;
-  }
-  
-  .navbar .navbar-nav li {
-    display: flex;
-    align-items: center;
-  }
-  
-  .navbar .navbar-nav li:last-child {
-    margin-left: auto;
-  }
-  
+}
