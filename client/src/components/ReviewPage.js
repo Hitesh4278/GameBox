@@ -33,10 +33,10 @@ export const ReviewPage = () => {
       // Handle the response as needed
       console.log(response.data);
 
-      // Clear the review after submitting
+      
       setReview('');
     } catch (error) {
-      // Handle error
+     
       console.log(error);
     }
   };
