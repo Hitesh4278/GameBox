@@ -11,7 +11,8 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authenticated, setAuthenticated] = useState(localStorage.getItem('authenticated') === 'true'); const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = useState(localStorage.getItem('authenticated') === 'true'); 
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,6 +36,7 @@ export const Login = () => {
         navigate('/');
       })
       .catch((error) => {
+        alert("Please Enter Correct Details!!")
         console.log(error);
       });
   };

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 import { NavBar } from './NavBar';
 import '../Css/SignUp.css'
 
@@ -7,6 +9,8 @@ export const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [register, setRegister] = useState(false);
+  const [authenticated, setAuthenticated] = useState(localStorage.getItem('authenticated') === 'true'); 
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevents the page from refreshing
@@ -23,7 +27,12 @@ export const SignUp = () => {
     axios(config)
       .then((result) => {
         setRegister(true);
-        window.location.href = '/login';
+        alert("Signed Up Successfull")
+        setAuthenticated(true);
+        localStorage.setItem('authenticated', true);
+        localStorage.setItem('email', email);
+        navigate('/')
+       
       })
       .catch((error) => {
         error = new Error();
@@ -32,7 +41,7 @@ export const SignUp = () => {
 
   return (
     <div>
-      <NavBar />
+      <NavBar authent={authenticated} />
     <div className='signUpDiv no-scrollbar' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <h2 style={{marginTop:'100px'}}>Sign Up</h2>
       <form onSubmit={handleSubmit}>
@@ -45,11 +54,6 @@ export const SignUp = () => {
           <input type="text" className="form-control" id="exampleInputPassword1" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <button type="submit" className="btn btn-danger" onClick={handleSubmit}>Submit</button>
-        {/* {register ? (
-          <p className="text-success" style={{fontWeight:'bold'}}>You Are Registered Successfully</p>
-        ) : (
-          <p className="text-danger">You Are Not Registered</p>
-        )} */}
       </form>
     </div>
     </div>
