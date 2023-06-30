@@ -40,9 +40,9 @@ export const SignUp = () => {
   }
 
   return (
-    <div>
+    <div className='signUpDiv'>
       <NavBar authent={authenticated} />
-    <div className='signUpDiv no-scrollbar' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className=' no-scrollbar' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <h2 style={{marginTop:'100px'}}>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
