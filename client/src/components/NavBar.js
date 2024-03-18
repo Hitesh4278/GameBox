@@ -31,12 +31,18 @@ export const NavBar = ({ authent }) => {
   const handleHome=()=>{
     navigate('/')
   }
+  const handleNews=()=>{
+    navigate('/news')
+  }
 
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px',minWidth:'100%' }}>
         <button className="btn btn-dark" style={{ fontSize: '30px' }} onClick={handleHome}>
           Home
+        </button>
+        <button className="btn btn-dark" style={{ fontSize: '30px' }} onClick={handleNews}>
+          News
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">

@@ -5,6 +5,7 @@ import { Login } from './components/Login';
 import { Home } from './components/Home';
 import { GamePage} from './components/GamePage';
 import { ReviewPage } from './components/ReviewPage';
+import { News } from './components/News';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/gamepage/:gameId" element={<GamePage />} />
           <Route path="/reviewPage/:gameId" element={<ReviewPage/>}/> 
+          <Route path="/news" element={<News/>}></Route>
         </Routes>
       </div>
     </Router>
