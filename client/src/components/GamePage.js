@@ -11,11 +11,25 @@ export const GamePage = () => {
   const [game, setGame] = useState({});
   const [screenShots, setScreenShots] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [trailer, setTrailer] = useState([]);
   const { gameId } = useParams();
   const url = `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
   const screenShotUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${apiKey}`;
+  const trailerUrl    = `https://api.rawg.io/api/games/${gameId}/movies?key=${apiKey}`
   const reviewsUrl = `http://localhost:8000/reviews/${gameId}`;
 
+
+  const getTrailer = () => {
+    axios
+      .get(trailerUrl)
+      .then(response => {
+        setTrailer(response.data);
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
   const getGame = () => {
     axios
       .get(url)
@@ -44,19 +58,20 @@ export const GamePage = () => {
       .get(reviewsUrl)
       .then(response => {
         setReviews(response.data);
-        console.log(response.data)
       })
       .catch(error => {
         console.error(error);
       });
   };
 
+  
   useEffect(() => {
     getGame();
     getScreenShots();
     getReviews();
+    // getTrailer();
   }, [gameId]);
-
+  
   return (
     <>
       <NavBar />

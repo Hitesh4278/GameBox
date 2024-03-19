@@ -4,7 +4,7 @@ import { NavBar } from './NavBar';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../Css/Login.css'
-
+import { LoginGoogle } from './LoginGoogle';
 
 
 export const Login = () => {
@@ -78,6 +78,7 @@ export const Login = () => {
             <Link to="/signup">
               <button className="btn btn-danger">New User</button>
             </Link>
+            <LoginGoogle/>
             {/* {isLoggedIn ? (
               <p className="text-dark">You are logged in successfully.</p>
             ) : (
@@ -86,6 +87,7 @@ export const Login = () => {
           </form>
         </div>
       </div>
+     
     </div>
   );
 };

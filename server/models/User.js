@@ -13,9 +13,7 @@ const UserSchema= new Schema({
     
     password:{
         type:String,
-         required:[true,"Please Provide an Password"],
-         unique:true,
-
+        required:[true,"Please Provide an Password"],
     }
    
 })
