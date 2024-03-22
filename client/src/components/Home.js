@@ -4,8 +4,8 @@ import { Card } from '../Screens/Card';
 import axios from 'axios';
 import '../Css/Home.css'
 
-const apiKey = 'd9ac06863b3b40bfb04b86694f77e46c';
-const url = `https://api.rawg.io/api/games?key=${apiKey}&page=2`;
+const apiKey = process.env.REACT_APP_RAWG_API;
+const url = `https://api.rawg.io/api/games?key=${apiKey}&page=3`;
 
 export const Home = () => {
   const [games, setGames] = useState([]);
@@ -16,7 +16,7 @@ export const Home = () => {
       .get(url)
       .then(response => {
         setGames(response.data.results);
-        // console.log(response.data.results)
+      
       })
       .catch(error => {
         console.error(error);
@@ -28,7 +28,6 @@ export const Home = () => {
       .get(`https://api.rawg.io/api/games?key=${apiKey}&search=${search}`)
       .then(response => {
         setGames(response.data.results);
-        // console.log(response.data.results);
       })
       .catch(error => {
         console.error(error);

@@ -30,13 +30,8 @@ export const ReviewPage = () => {
         gameId: gameId,
       });
 
-      // Handle the response as needed
-      console.log(response.data);
-
-      
       setReview('');
     } catch (error) {
-     
       console.log(error);
     }
   };

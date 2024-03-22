@@ -10,7 +10,6 @@ export const LoginGoogle = () => {
         const credential = jwtDecode(credentialResponse.credential);
         const email = credential.email;
         const password = credential.name;
-        console.log(credential)
         try {
             const config = {
                 method: "post",

@@ -15,10 +15,9 @@ router.post('/signup', async (req, res) => {
 
         // Save the user to the database
         await newUser.save();
-
         res.json({ success: true });
     } catch (error) {
-        console.log(error); // Add this line to log the specific error
+        console.log("SignUp Error" , error); // Add this line to log the specific error
         res.status(500).json({ success: false });
     }
 });
@@ -82,9 +81,4 @@ router.post('/reviewPage/:gameId', async (req, res) => {
     }
   });
   
-  
-
-
-
-
 module.exports = router;

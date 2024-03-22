@@ -13,7 +13,6 @@ export const News = () => {
             .get(newsUrl)
             .then(response => {
                 setNews(response.data.articles);
-                console.log(response.data.articles);
             })
             .catch(error => {
                 console.error(error);

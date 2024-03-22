@@ -1,16 +1,18 @@
 const express = require('express');
 const app = express();
 const PORT = 8000;
-const Connection = require('./db/db');
 const userRoutes = require('./routes/routes');
+const dotenv  = require('dotenv')
+dotenv.config();
 
+const Connection = require('./db/db');
 Connection();
-
 app.use(express.json()); // Middleware to parse JSON request bodies
 
 app.get('/', (req, res) => {
   res.send('Hello');
 });
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*") // * becuase front end not created 
   res.header(
@@ -27,5 +29,5 @@ app.use((req, res, next) => {
 app.use('/', userRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server Started on mera ${PORT}`);
+  console.log(`Server Started on ${PORT}`);
 });

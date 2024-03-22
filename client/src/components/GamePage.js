@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../Css/GamePage.css';
 
-const apiKey = 'd9ac06863b3b40bfb04b86694f77e46c';
+const apiKey = process.env.REACT_APP_RAWG_API;
 
 export const GamePage = () => {
   const [game, setGame] = useState({});
@@ -24,7 +24,6 @@ export const GamePage = () => {
       .get(trailerUrl)
       .then(response => {
         setTrailer(response.data);
-        console.log(response.data)
       })
       .catch(error => {
         console.error(error);
@@ -35,7 +34,6 @@ export const GamePage = () => {
       .get(url)
       .then(response => {
         setGame(response.data);
-        // console.log(response.data)
       })
       .catch(error => {
         console.error(error);
