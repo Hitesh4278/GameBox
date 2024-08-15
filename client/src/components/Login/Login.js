@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { NavBar } from './NavBar';
+import { NavBar } from '../Navbar/NavBar';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import '../Css/Login.css'
+import '../../css/Login.css'
 import { LoginGoogle } from './LoginGoogle';
 
 
@@ -11,14 +11,14 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authenticated, setAuthenticated] = useState(localStorage.getItem('authenticated') === 'true'); 
+  const [authenticated, setAuthenticated] = useState(localStorage.getItem('authenticated') === 'true');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const config = {
       method: 'post',
-      url: 'http://localhost:8000/login',
+      url: process.env.REACT_APP_BACKEND_URL + 'login',
       data: {
         email,
         password,
@@ -46,10 +46,10 @@ export const Login = () => {
       <div >
         <NavBar authent={authenticated} />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <h2 style={{marginTop:'100px',color:'white'}}>Login</h2>
+          <h2 style={{ marginTop: '100px', color: 'white' }}>Login</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="exampleInputEmail1" style={{fontWeight:'bold' ,color:'white'}}>Email address</label>
+              <label htmlFor="exampleInputEmail1" style={{ fontWeight: 'bold', color: 'white' }}>Email address</label>
               <input
                 type="email"
                 className="form-control"
@@ -62,7 +62,7 @@ export const Login = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="exampleInputPassword1"style={{fontWeight:'bold',color:'white' }}>Password</label>
+              <label htmlFor="exampleInputPassword1" style={{ fontWeight: 'bold', color: 'white' }}>Password</label>
               <input
                 type="password"
                 className="form-control"
@@ -78,7 +78,7 @@ export const Login = () => {
             <Link to="/signup">
               <button className="btn btn-danger">New User</button>
             </Link>
-            <LoginGoogle/>
+            {/* <LoginGoogle /> */}
             {/* {isLoggedIn ? (
               <p className="text-dark">You are logged in successfully.</p>
             ) : (
@@ -86,8 +86,10 @@ export const Login = () => {
             )} */}
           </form>
         </div>
+        <div style={{ color: 'blue' , display:'flex', justifyContent:'center', marginTop :'5px' }}>
+          <LoginGoogle />
+        </div>
       </div>
-     
     </div>
   );
 };

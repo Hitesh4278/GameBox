@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../Css/NavBar.css'
-export const NavBar = ({ authent }) => {
+import '../../css/NavBar.css';
+
+export const NavBar = ({ setIsLoggedIn }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('authenticated');
@@ -17,27 +18,30 @@ export const NavBar = ({ authent }) => {
     localStorage.removeItem('email');
     setAuthenticated(false);
     setEmail('');
+    setIsLoggedIn(false);
     alert('Logged Out');
+    navigate('/');
   };
-  
-  const handleSignUp=()=>{
-    navigate('/signup')
-  }
-  
-  const handleLogin=()=>{
-    navigate('/login')
-  }
 
-  const handleHome=()=>{
-    navigate('/')
-  }
-  const handleNews=()=>{
-    navigate('/news')
-  }
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
+  const handleHome = () => {
+    navigate('/');
+  };
+
+  const handleNews = () => {
+    navigate('/news');
+  };
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px',minWidth:'100%' }}>
+      <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px', minWidth: '100%' }}>
         <button className="btn btn-dark" style={{ fontSize: '30px' }} onClick={handleHome}>
           Home
         </button>
@@ -47,9 +51,9 @@ export const NavBar = ({ authent }) => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             {authenticated ? (
-              <li className=" d-flex">
+              <li className="d-flex">
                 <span>
-                  <p className="text-white mr-2" style={{marginTop:'15px'}}>{email}</p>
+                  <p className="text-white mr-2" style={{ marginTop: '15px' }}>{email}</p>
                 </span>
                 <button className="btn btn-dark" onClick={handleLogout}>
                   Logout

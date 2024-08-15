@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { NavBar } from './NavBar';
+import { NavBar } from '../Navbar/NavBar';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import '../Css/ReviewPage.css';
+import '../../css/ReviewPage.css';
 
 export const ReviewPage = () => {
   const [review, setReview] = useState('');

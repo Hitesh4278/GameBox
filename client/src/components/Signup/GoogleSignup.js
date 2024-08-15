@@ -4,16 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
-export const LoginGoogle = () => {
+export const GoogleSignup = () => {
     const navigate = useNavigate()
     const handleSuccess = async (credentialResponse) => {
         const credential = jwtDecode(credentialResponse.credential);
         const email = credential.email;
         const password = credential.name;
+
         try {
             const config = {
                 method: "post",
-                url: "http://localhost:8000/login",
+                url: process.env.REACT_APP_BACKEND_URL + '/signup',
                 data: {
                     email: email,
                     password: password,
@@ -21,14 +22,14 @@ export const LoginGoogle = () => {
             }
             axios(config)
                 .then((result) => {
-                    alert("Login Successfull")
+                    alert("Signed Up Successfull")
                     localStorage.setItem('authenticated', true);
                     localStorage.setItem('email', email);
                     navigate('/')
 
                 })
                 .catch((error) => {
-                    alert("Login Failed")
+                    alert("Signed Up Failed")
                     error = new Error();
                 });
         } catch (error) {
@@ -37,8 +38,8 @@ export const LoginGoogle = () => {
 
     }
     const handleError = () => {
-        console.log('Login Failed');
-        alert("Login  Failed");
+        console.log('Signup Failed');
+        alert("Signup Failed");
     };
 
     return (

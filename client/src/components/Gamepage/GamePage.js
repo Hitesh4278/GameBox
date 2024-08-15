@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { NavBar } from './NavBar';
+import { NavBar } from '../Navbar/NavBar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import '../Css/GamePage.css';
+import '../../css/GamePage.css';
 
 const apiKey = process.env.REACT_APP_RAWG_API;
 

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { NavBar } from './NavBar';
+import { NavBar } from '../Navbar/NavBar';
 import { GoogleSignup } from './GoogleSignup';
-import '../Css/SignUp.css'
+import { Link } from 'react-router-dom';
+import '../../css/SignUp.css'
 
 export const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -13,11 +14,11 @@ export const SignUp = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     const config = {
       method: "post",
-      url: "http://localhost:8000/signup",
+      url: process.env.REACT_APP_BACKEND_URL + '/signup',
       data: {
         email,
         password,
@@ -54,8 +55,13 @@ export const SignUp = () => {
             <input type="text" className="form-control" id="exampleInputPassword1" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <button type="submit" className="btn btn-danger" onClick={handleSubmit}>Submit</button>
+          <Link to="/login">
+            <button className="btn btn-danger" style={{marginLeft :'5px'}}>Login</button>
+          </Link>
         </form>
-        <GoogleSignup/>
+      </div>
+      <div style={{ color: 'blue', display: 'flex', justifyContent: 'center', marginTop: '5px' }}>
+        <GoogleSignup />
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { SignUp } from './components/SignUp';
-import { Login } from './components/Login';
-import { Home } from './components/Home';
-import { GamePage } from './components/GamePage';
-import { ReviewPage } from './components/ReviewPage';
-import { News } from './components/News';
+import { SignUp } from './components/Signup/SignUp';
+import { Login } from './components/Login/Login';
+import { Home } from './components/Homepage/Home';
+import { GamePage } from './components/Gamepage/GamePage';
+import { ReviewPage } from './components/ReviewPage/ReviewPage';
+import { News } from './components/News/News';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 function App() {

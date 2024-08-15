@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../Css/Card.css';
+import '../css/Card.css';
 
 export const Card = ({ game }) => {
   const GameId = game.id;
