@@ -13,10 +13,10 @@ export const GamePage = () => {
   const [reviews, setReviews] = useState([]);
   const [trailer, setTrailer] = useState([]);
   const { gameId } = useParams();
-  const url = `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
+  const url =           `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
   const screenShotUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${apiKey}`;
   const trailerUrl    = `https://api.rawg.io/api/games/${gameId}/movies?key=${apiKey}`
-  const reviewsUrl = `http://localhost:8000/reviews/${gameId}`;
+  const reviewsUrl =    `http://localhost:8000/reviews/${gameId}`;
 
 
   const getTrailer = () => {
@@ -74,6 +74,7 @@ export const GamePage = () => {
     <>
       <NavBar />
       <div className='d-flex justify-content-between '>
+       
         <div className='game-info' style={{ marginLeft: '10px' }}>
           <h3 style={{ marginTop: '2px' }}>Game Info :</h3>
           <p><strong>Name : </strong>{game.name}</p>

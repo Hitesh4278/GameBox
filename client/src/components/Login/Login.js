@@ -78,6 +78,13 @@ export const Login = () => {
             <Link to="/signup">
               <button className="btn btn-danger">New User</button>
             </Link>
+            {
+              " "
+            }
+            <Link to="/forgot-password">
+              <button className="btn btn-danger">Forgot Password ?</button>
+            </Link>
+
             {/* <LoginGoogle /> */}
             {/* {isLoggedIn ? (
               <p className="text-dark">You are logged in successfully.</p>

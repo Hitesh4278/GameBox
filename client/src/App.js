@@ -7,6 +7,9 @@ import { GamePage } from './components/Gamepage/GamePage';
 import { ReviewPage } from './components/ReviewPage/ReviewPage';
 import { News } from './components/News/News';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { ForgotPassword } from './components/ResetPassword/ForgotPassword'
+import { PasswordUpdate } from './components/ResetPassword/PasswordUpdate';
+
 
 function App() {
   return (
@@ -20,6 +23,8 @@ function App() {
             <Route path="/gamepage/:gameId" element={<GamePage />} />
             <Route path="/reviewPage/:gameId" element={<ReviewPage />} />
             <Route path="/news" element={<News />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:id/:token" element={<PasswordUpdate />} />
           </Routes>
         </Router>
       </GoogleOAuthProvider>
