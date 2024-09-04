@@ -105,3 +105,12 @@
   background-color: #003d7a;
   transform: translateY(0);
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh; /* Adjust the height based on your layout */
+  font-size: 1.5rem;
+  color: #555;
+}

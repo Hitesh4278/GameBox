@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../css/NavBar.css';
+import '../../css/NavBar.css'; // Create a CSS file for your navbar styles
 
 export const NavBar = ({ setIsLoggedIn }) => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -40,42 +40,42 @@ export const NavBar = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-dark" style={{ height: '80px', minWidth: '100%' }}>
-        <button className="btn btn-dark" style={{ fontSize: '30px' }} onClick={handleHome}>
+    <nav className="navbar">
+      <div className="nav-left">
+        <button className="nav-button" onClick={handleHome}>
           Home
         </button>
-        <button className="btn btn-dark" style={{ fontSize: '30px' }} onClick={handleNews}>
+        <button className="nav-button" onClick={handleNews}>
           News
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ml-auto">
-            {authenticated ? (
-              <li className="d-flex">
-                <span>
-                  <p className="text-white mr-2" style={{ marginTop: '15px' }}>{email}</p>
-                </span>
-                <button className="btn btn-dark" onClick={handleLogout}>
-                  Logout
+      </div>
+      <div className="nav-right">
+        <ul className="nav-list">
+          {authenticated ? (
+            <li className="nav-item">
+              <span className="nav-email">
+                {email}
+              </span>
+              <button className="nav-button" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
+          ) : (
+            <>
+              <li className="nav-item">
+                <button className="nav-button" onClick={handleSignUp}>
+                  SignUp
                 </button>
               </li>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <button className="btn btn-dark" onClick={handleSignUp}>
-                    SignUp
-                  </button>
-                </li>
-                <li className="nav-item">
-                  <button className="btn btn-dark" onClick={handleLogin}>
-                    Login
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
-      </nav>
-    </div>
+              <li className="nav-item">
+                <button className="nav-button" onClick={handleLogin}>
+                  Login
+                </button>
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
+    </nav>
   );
 };

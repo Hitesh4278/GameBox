@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { NavBar } from '../Navbar/NavBar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import '../../css/GamePage.css';
 
 const apiKey = process.env.REACT_APP_RAWG_API;
@@ -11,158 +10,146 @@ export const GamePage = () => {
   const [game, setGame] = useState({});
   const [screenShots, setScreenShots] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [trailer, setTrailer] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state added
   const { gameId } = useParams();
-  const url =           `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
+  
+  const url = `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
   const screenShotUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${apiKey}`;
-  const trailerUrl    = `https://api.rawg.io/api/games/${gameId}/movies?key=${apiKey}`
-  const reviewsUrl =    `http://localhost:8000/reviews/${gameId}`;
+  const reviewsUrl = `http://localhost:8000/reviews/${gameId}`;
 
-
-  const getTrailer = () => {
-    axios
-      .get(trailerUrl)
-      .then(response => {
-        setTrailer(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-  const getGame = () => {
-    axios
-      .get(url)
-      .then(response => {
-        setGame(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  const getScreenShots = () => {
-    axios
-      .get(screenShotUrl)
-      .then(response => {
-        setScreenShots(response.data.results);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  const getReviews = () => {
-    axios
-      .get(reviewsUrl)
-      .then(response => {
-        setReviews(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  
   useEffect(() => {
-    getGame();
-    getScreenShots();
-    getReviews();
-    // getTrailer();
+    const getGame = async () => {
+      try {
+        const gameData = await axios.get(url);
+        setGame(gameData.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const getScreenShots = async () => {
+      try {
+        const screenShotData = await axios.get(screenShotUrl);
+        setScreenShots(screenShotData.data.results);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const getReviews = async () => {
+      try {
+        const reviewsData = await axios.get(reviewsUrl);
+        setReviews(reviewsData.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchData = async () => {
+      setLoading(true); // Start loading
+      await Promise.all([getGame(), getScreenShots(), getReviews()]);
+      setLoading(false); // Stop loading once all data is fetched
+    };
+
+    fetchData();
   }, [gameId]);
-  
+
   return (
     <>
       <NavBar />
-      <div className='d-flex justify-content-between '>
-       
-        <div className='game-info' style={{ marginLeft: '10px' }}>
-          <h3 style={{ marginTop: '2px' }}>Game Info :</h3>
-          <p><strong>Name : </strong>{game.name}</p>
-          <img
-            src={game.background_image}
-            className="card-img-top"
-            alt={game.background_image_additional}
-            style={{ width: '600px', height: 'auto' }}
-          />
-          <p><strong>Release Date :</strong> {game.released}</p>
-          <p> <strong>Rating :</strong>  {game.rating}</p>
-          <p><strong>GameId :</strong> {gameId}</p>
-          <p className='description'> <strong>Description : </strong>{game.description_raw}</p>
+      {loading ? ( // Display loading spinner while data is loading
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading...</p>
+        </div>
+      ) : (
+        <div className="container">
+          <div className="game-header">
+            <h3 className="game-title">{game.name}</h3>
+            <div className="game-image">
+              <img
+                src={game.background_image}
+                alt={game.background_image_additional}
+              />
+            </div>
+            <div className="game-details">
+              <p><strong>Release Date:</strong> {game.released}</p>
+              <p><strong>Rating:</strong> {game.rating}</p>
+              <p><strong>Description:</strong> {game.description_raw}</p>
+            </div>
+          </div>
 
-          <h2 className='screenshots-heading'>Screenshots:</h2>
-          <div className="screenshots-container">
+          <h2 className="section-title">Screenshots:</h2>
+          <div className="screenshots">
             {screenShots.map(screenshot => (
               <img
                 key={screenshot.id}
                 src={screenshot.image}
                 alt={`Screenshot ${screenshot.id}`}
-                className="screenshot-image"
               />
             ))}
           </div>
 
-          <p> <strong>Developers : </strong> {game.developers && game.developers.map(developer => (
-            <div key={developer.id}>
-              <>{developer.name}</>
+          <div className="details-grid">
+            <div>
+              <h3>Developers:</h3>
+              <p>{game.developers && game.developers.map(dev => dev.name).join(', ')}</p>
             </div>
-          ))}</p>
 
-          <p><strong>Genres:</strong></p>
-          <ul>
-            {game.genres && game.genres.map(genre => (
-              <li key={genre.id}>{genre.name}</li>
-            ))}
-          </ul>
+            <div>
+              <h3>Genres:</h3>
+              <p>{game.genres && game.genres.map(genre => genre.name).join(', ')}</p>
+            </div>
 
-          <p><strong>Available On:</strong></p>
-          <ul>
-            {game.platforms && game.platforms.map(platform => (
-              <li key={platform.platform.id}>{platform.platform.name}</li>
-            ))}
-          </ul>
+            <div>
+              <h3>Available On:</h3>
+              <ul>
+                {game.platforms && game.platforms.map(platform => (
+                  <li key={platform.platform.id}>{platform.platform.name}</li>
+                ))}
+              </ul>
+            </div>
 
-          <p><strong>Platform Requirements :</strong></p>
-          <ul>
-            {game.platforms && game.platforms.map(platform => {
-              if (platform.platform.name === "PC") {
-                return (
-                  <li key={platform.platform.id}>
-                    <h3>{platform.platform.name}</h3>
-                    <p> {platform.requirements.recommended}</p>
-                    <p> {platform.requirements.minimum}</p>
-                  </li>
-                );
-              } else {
-                return null;
-              }
-            })}
-          </ul>
-          <div className="review-section">
-            <h3>Reviews:</h3>
+            <div>
+              <h3>Platform Requirements:</h3>
+              <ul>
+                {game.platforms && game.platforms.map(platform => {
+                  if (platform.platform.name === "PC") {
+                    return (
+                      <li key={platform.platform.id}>
+                        <h4>{platform.platform.name}</h4>
+                        <p><strong>Recommended:</strong> {platform.requirements?.recommended}</p>
+                        <p><strong>Minimum:</strong> {platform.requirements?.minimum}</p>
+                      </li>
+                    );
+                  }
+                  return null;
+                })}
+              </ul>
+            </div>
+          </div>
+
+          <div className="reviews">
+            <h2 className="section-title">Reviews:</h2>
             {reviews.length > 0 ? (
-              <ol className="review-list">
+              <ul>
                 {reviews.map((review, index) => (
-                  <li key={review.gameId} className="review-item">
-                    <p>
-                      <span className="review-number">{index + 1}.</span>
-                      {review.reviewText}
-                    </p>
+                  <li key={index}>
+                    <p>{review.reviewText}</p>
                   </li>
                 ))}
-              </ol>
+              </ul>
             ) : (
-              <p className="no-reviews">No reviews available.</p>
+              <p>No reviews available.</p>
             )}
           </div>
-          <p> <strong>For More Info:</strong> <span className='review-link'><a href={game.website}>Click Here</a></span></p>
-          <p>
-            <span><strong>Add A Review:</strong> </span>
-            <span className="review-link">
-              <Link to={`/reviewPage/${gameId}`}>Click Here</Link>
-            </span>
-          </p>
+
+          <div className="links">
+            <p><strong>For More Info:</strong> <a href={game.website}>Click Here</a></p>
+            <p><strong>Add A Review:</strong> <a href={`/reviewPage/${gameId}`}>Click Here</a></p>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

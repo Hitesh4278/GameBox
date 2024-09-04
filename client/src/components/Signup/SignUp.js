@@ -1,10 +1,11 @@
+import '../../css/SignUp.css'
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '../Navbar/NavBar';
 import { GoogleSignup } from './GoogleSignup';
 import { Link } from 'react-router-dom';
-import '../../css/SignUp.css'
+
 
 export const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -28,11 +29,11 @@ export const SignUp = () => {
     axios(config)
       .then((result) => {
         setRegister(true);
-        alert("Signed Up Successfull")
+        alert("Signed Up Successfully");
         setAuthenticated(true);
         localStorage.setItem('authenticated', true);
         localStorage.setItem('email', email);
-        navigate('/')
+        navigate('/');
 
       })
       .catch((error) => {
@@ -41,27 +42,29 @@ export const SignUp = () => {
   }
 
   return (
-    <div className='signUpDiv'>
+    <div>
       <NavBar authent={authenticated} />
-      <div className=' no-scrollbar' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h2 style={{ marginTop: '100px' }}>Sign Up</h2>
-        <form onSubmit={handleSubmit}>
+      <div className="signup-container">
+        <h2>Sign Up</h2>
+        <form className="signup-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="exampleInputEmail1" style={{ fontWeight: 'bold' }}>Email address</label>
-            <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: '500px' }} />
+            <label htmlFor="exampleInputEmail1">Email address</label>
+            <input type="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="form-group">
-            <label htmlFor="exampleInputPassword1" style={{ fontWeight: 'bold' }}>Password</label>
-            <input type="text" className="form-control" id="exampleInputPassword1" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <label htmlFor="exampleInputPassword1">Password</label>
+            <input type="password" id="exampleInputPassword1" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <button type="submit" className="btn btn-danger" onClick={handleSubmit}>Submit</button>
-          <Link to="/login">
-            <button className="btn btn-danger" style={{marginLeft :'5px'}}>Login</button>
-          </Link>
+          <div className="button-group">
+            <button type="submit" className="submit-btn">Submit</button>
+            <Link to="/login" className="login-link">
+              <button className="login-btn">Login</button>
+            </Link>
+          </div>
         </form>
-      </div>
-      <div style={{ color: 'blue', display: 'flex', justifyContent: 'center', marginTop: '5px' }}>
-        <GoogleSignup />
+        <div className="google-signup-container">
+          <GoogleSignup />
+        </div>
       </div>
     </div>
   );

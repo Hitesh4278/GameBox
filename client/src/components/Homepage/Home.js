@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { NavBar } from '../Navbar/NavBar';
 import { Card } from '../../Screens/Card';
 import axios from 'axios';
-import '../../css/Home.css';
 import LandingPage from '../LandingPage/LandingPage';
+import '../../css/Home.css'; // Import the CSS file
 
 const apiKey = process.env.REACT_APP_RAWG_API;
 const url = `https://api.rawg.io/api/games?key=${apiKey}&page=3`;
@@ -12,27 +12,30 @@ export const Home = () => {
   const [games, setGames] = useState([]);
   const [search, setSearch] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('authenticated'));
+  const [loading, setLoading] = useState(false);
 
-  const getAllGames = () => {
-    axios
-      .get(url)
-      .then(response => {
-        setGames(response.data.results);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  const getAllGames = async () => {
+    try {
+      setLoading(true); // Start loading
+      const response = await axios.get(url);
+      setGames(response.data.results);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
-  const getSearchedGames = () => {
-    axios
-      .get(`https://api.rawg.io/api/games?key=${apiKey}&search=${search}`)
-      .then(response => {
-        setGames(response.data.results);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  const getSearchedGames = async () => {
+    try {
+      setLoading(true); // Start loading
+      const response = await axios.get(`https://api.rawg.io/api/games?key=${apiKey}&search=${search}`);
+      setGames(response.data.results);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
   useEffect(() => {
@@ -55,16 +58,15 @@ export const Home = () => {
       ) : (
         <div>
           <NavBar setIsLoggedIn={setIsLoggedIn} />
-          <div className="header-container">
-            <div className="quote-container">
-              <h2 className="quote-heading">
+          <div className="container">
+            <div>
+              <h2>
                 "Games are a way to escape reality and immerse yourself in incredible adventures."
               </h2>
             </div>
 
-            <div className="search-bar" style={{ marginTop: '5px' }}>
+            <div>
               <input
-                className="form-control mr-sm-2"
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
@@ -72,21 +74,22 @@ export const Home = () => {
                 onChange={e => {
                   setSearch(e.target.value);
                 }}
+                className="search-input"
               />
             </div>
           </div>
 
-          <div style={{ marginLeft: '20px', paddingLeft: '10px' }}>
-            <div className="row">
+          {loading ? (
+            <div className="loading">Loading...</div>
+          ) : (
+            <div className="card-container">
               {games.map(game => (
-                <div className="col-lg-3 col-md-6 col-sm-12" key={game.id}>
-                  <div>
-                    <Card game={game} />
-                  </div>
+                <div key={game.id} className="">
+                  <Card game={game} />
                 </div>
               ))}
             </div>
-          </div>
+          )}
         </div>
       )}
     </>

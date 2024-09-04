@@ -1,8 +1,94 @@
-.mainDiv {
-    background-image: url(https://media.rawg.io/media/screenshots/622/6220d4a748fd1abd23ece425111e8149.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    min-height:100vh;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f2f5;
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  display: block;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+}
+
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.button-group button:hover {
+  background-color: #0056b3;
+  cursor: pointer;
+}
+
+.login-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 500px) {
+  .login-container {
+    width: 90%;
+    margin: 20px auto;
+    padding: 15px;
   }
-  
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .submit-btn,
+  .login-link,
+  .new-user-btn {
+    width: 100%; 
+  }
+}

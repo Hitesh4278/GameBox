@@ -1,25 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../css/Card.css';
+import '../css/Card.css'; // Import your CSS file for styling
 
 export const Card = ({ game }) => {
   const GameId = game.id;
   return (
-    <div className="col-sm-4 mb-3">
-      <div className="card">
+    <div className="card">
+      <div className="card-image">
         <img
           src={game.background_image}
-          className="card-img-top"
-          alt="Game Cover"
+          alt={`${game.name} Cover`}
         />
-        <div className="card-body">
-          <h5 className="card-title">{game.name}</h5>
-          <p className="card-text"> {/* Add card-text class here */}
-            Rating: <span className="rating">{game.rating}</span> <br />
-            Release: <span className="release-date">{game.released}</span> <br />
-            For More: <button><Link to={`/gamepage/${GameId}`}>Click Here</Link> </button> 
-          </p>
-        </div>
+      </div>
+      <div className="card-content">
+        <h5>{game.name}</h5>
+        <p>
+          Rating: <span>{game.rating}</span> <br />
+          Release: <span>{game.released}</span>
+        </p>
+        <Link to={`/gamepage/${GameId}`} className="card-button">
+          Click Here
+        </Link>
       </div>
     </div>
   );
