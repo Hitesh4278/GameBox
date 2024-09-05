@@ -21,7 +21,7 @@ export const LoginGoogle = () => {
             }
             axios(config)
                 .then((result) => {
-                    alert("Login Successfull")
+                    alert(result.data.message);
                     localStorage.setItem('authenticated', true);
                     localStorage.setItem('email', email);
                     navigate('/')
@@ -37,8 +37,8 @@ export const LoginGoogle = () => {
 
     }
     const handleError = () => {
-        console.log('Login Failed');
-        alert("Login  Failed");
+        console.log('Google Login Failed');
+        alert("Google Login Failed");
     };
 
     return (

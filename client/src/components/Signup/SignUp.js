@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 export const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [register, setRegister] = useState(false);
   const [authenticated, setAuthenticated] = useState(localStorage.getItem('authenticated') === 'true');
   const navigate = useNavigate();
 
@@ -28,8 +27,7 @@ export const SignUp = () => {
 
     axios(config)
       .then((result) => {
-        setRegister(true);
-        alert("Signed Up Successfully");
+        alert(result.data.message);
         setAuthenticated(true);
         localStorage.setItem('authenticated', true);
         localStorage.setItem('email', email);

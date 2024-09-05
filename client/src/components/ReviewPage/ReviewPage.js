@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavBar } from '../Navbar/NavBar';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import '../../css/ReviewPage.css';
 
 export const ReviewPage = () => {
@@ -9,6 +9,7 @@ export const ReviewPage = () => {
   const [email, setEmail] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const { gameId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('authenticated');
@@ -30,7 +31,12 @@ export const ReviewPage = () => {
         gameId: gameId,
       });
 
-      setReview('');
+      if(response)
+      {
+        alert('Review submitted successfully!');
+        setReview('');
+        navigate(`/gamepage/${gameId}`)
+      }
     } catch (error) {
       console.log(error);
     }

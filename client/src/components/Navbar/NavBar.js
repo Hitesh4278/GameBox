@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../css/NavBar.css'; // Create a CSS file for your navbar styles
+import '../../css/NavBar.css';
 
-export const NavBar = ({ setIsLoggedIn }) => {
+export const NavBar = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
@@ -13,39 +13,26 @@ export const NavBar = ({ setIsLoggedIn }) => {
     setEmail(localStorage.getItem('email'));
   }, []);
 
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('authenticated');
     localStorage.removeItem('email');
     setAuthenticated(false);
     setEmail('');
-    setIsLoggedIn(false);
     alert('Logged Out');
     navigate('/');
-  };
-
-  const handleSignUp = () => {
-    navigate('/signup');
-  };
-
-  const handleLogin = () => {
-    navigate('/login');
-  };
-
-  const handleHome = () => {
-    navigate('/');
-  };
-
-  const handleNews = () => {
-    navigate('/news');
   };
 
   return (
     <nav className="navbar">
       <div className="nav-left">
-        <button className="nav-button" onClick={handleHome}>
+        <button className="nav-button" onClick={() => handleNavigation('/')}>
           Home
         </button>
-        <button className="nav-button" onClick={handleNews}>
+        <button className="nav-button" onClick={() => handleNavigation('/news')}>
           News
         </button>
       </div>
@@ -53,6 +40,10 @@ export const NavBar = ({ setIsLoggedIn }) => {
         <ul className="nav-list">
           {authenticated ? (
             <li className="nav-item">
+              <button className='nav-button' onClick={() => handleNavigation('/wishlist')}>
+                Favourites
+              </button>
+              {" "}
               <span className="nav-email">
                 {email}
               </span>
@@ -63,12 +54,12 @@ export const NavBar = ({ setIsLoggedIn }) => {
           ) : (
             <>
               <li className="nav-item">
-                <button className="nav-button" onClick={handleSignUp}>
+                <button className="nav-button" onClick={() => handleNavigation('/signup')}>
                   SignUp
                 </button>
               </li>
               <li className="nav-item">
-                <button className="nav-button" onClick={handleLogin}>
+                <button className="nav-button" onClick={() => handleNavigation('/login')}>
                   Login
                 </button>
               </li>

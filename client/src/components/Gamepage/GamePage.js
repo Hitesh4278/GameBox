@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavBar } from '../Navbar/NavBar';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import '../../css/GamePage.css';
 
@@ -16,13 +16,19 @@ export const GamePage = () => {
   const [newReviewText, setNewReviewText] = useState('');
   const { gameId } = useParams();
   const email = localStorage.getItem('email');
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('authenticated') === 'true');
+  const [showAuthRequired, setShowAuthRequired] = useState(false);
 
   const url = `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
   const screenShotUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${apiKey}`;
   const reviewsUrl = `http://localhost:8000/reviews/${gameId}`;
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setShowAuthRequired(true);
+      return;
+    }
+
     const fetchData = async () => {
       try {
         const [gameData, screenShotData, reviewsData] = await Promise.all([
@@ -41,7 +47,7 @@ export const GamePage = () => {
     };
 
     fetchData();
-  }, [gameId, url, screenShotUrl, reviewsUrl]);
+  }, [gameId, url, screenShotUrl, reviewsUrl, isAuthenticated]);
 
   const handleVote = async (reviewId, type) => {
     try {
@@ -81,11 +87,11 @@ export const GamePage = () => {
   const handleEdit = (reviewId, currentText) => {
     setCurrentReviewId(reviewId);
     setNewReviewText(currentText);
-    setIsModalOpen(true); // Open the modal
+    setIsModalOpen(true); 
   };
 
   const handleModalClose = () => {
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
   };
 
   const handleSubmitEdit = async () => {
@@ -102,7 +108,7 @@ export const GamePage = () => {
         return review;
       }));
 
-      setIsModalOpen(false); // Close the modal
+      setIsModalOpen(false); 
       alert('Review updated successfully');
     } catch (error) {
       console.error('Error updating review:', error);
@@ -110,121 +116,134 @@ export const GamePage = () => {
     }
   };
 
+
   return (
     <>
-      <NavBar />
-      {loading ? (
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading...</p>
+      <NavBar/>
+      {showAuthRequired && (
+        <div className="modal-overlay">
+          <div className="auth-required-popup">
+            <h2>Authentication Required</h2>
+            <p>You need to be logged in to view this page.</p>
+            <button onClick={() => window.location.href = '/login'}>Login</button>
+          </div>
         </div>
-      ) : (
-        <div className="container">
-          <div className="game-header">
-            <h3 className="game-title">{game.name}</h3>
-            <div className="game-image">
-              <img src={game.background_image} alt={game.background_image_additional} />
-            </div>
-            <div className="game-details">
-              <p><strong>Release Date:</strong> {game.released}</p>
-              <p><strong>Rating:</strong> {game.rating}</p>
-              <p><strong>Description:</strong> {game.description_raw}</p>
-            </div>
+      )}
+
+      {!showAuthRequired && (
+        loading ? (
+          <div className="loading-container">
+            <div className="spinner"></div>
+            <p>Loading...</p>
           </div>
-
-          <h2 className="section-title">Screenshots:</h2>
-          <div className="screenshots">
-            {screenShots.map(screenshot => (
-              <img key={screenshot.id} src={screenshot.image} alt={`Screenshot ${screenshot.id}`} />
-            ))}
-          </div>
-
-          <div className="details-grid">
-            <div>
-              <h3>Developers:</h3>
-              <p>{game.developers && game.developers.map(dev => dev.name).join(', ')}</p>
-            </div>
-
-            <div>
-              <h3>Genres:</h3>
-              <p>{game.genres && game.genres.map(genre => genre.name).join(', ')}</p>
-            </div>
-
-            <div>
-              <h3>Available On:</h3>
-              <ul>
-                {game.platforms && game.platforms.map(platform => (
-                  <li key={platform.platform.id}>{platform.platform.name}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3>Platform Requirements:</h3>
-              <ul>
-                {game.platforms && game.platforms.map(platform => {
-                  if (platform.platform.name === "PC") {
-                    return (
-                      <li key={platform.platform.id}>
-                        <h4>{platform.platform.name}</h4>
-                        <p><strong>Recommended:</strong> {platform.requirements?.recommended}</p>
-                        <p><strong>Minimum:</strong> {platform.requirements?.minimum}</p>
-                      </li>
-                    );
-                  }
-                  return null;
-                })}
-              </ul>
-            </div>
-          </div>
-
-          <div className="reviews">
-            <h2 className="section-title">Reviews:</h2>
-            {reviews.length > 0 ? (
-              <ul>
-                {reviews.map(review => (
-                  <li key={review._id}>
-                    <p>{review.reviewText}</p>
-                    <div className="review-votes">
-                      <button onClick={() => handleVote(review._id, 'upvote')}>Upvote</button>
-                      <button onClick={() => handleVote(review._id, 'downvote')}>Downvote</button>
-                      <button onClick={() => handleEdit(review._id, review.reviewText)}>Edit</button>
-                      <button onClick={() => handleDelete(review._id)}>Delete</button>
-                      <span>Total Upvotes: {review.upvotes}</span>
-                      <span>Total Downvotes: {review.downvotes}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No reviews available.</p>
-            )}
-          </div>
-
-          {/* Edit Review Modal */}
-          {isModalOpen && (
-            <div className="modal">
-              <div className="modal-content">
-                <h2>Edit Review</h2>
-                <textarea
-                  value={newReviewText}
-                  onChange={(e) => setNewReviewText(e.target.value)}
-                  rows="5"
-                  cols="50"
-                />
-                <div className="modal-actions">
-                  <button onClick={handleSubmitEdit}>Submit</button>
-                  <button className='cancel-button' onClick={handleModalClose}>Cancel</button>
-                </div>
+        ) : (
+          <div className="container">
+            <div className="game-header">
+              <h3 className="game-title">{game.name}</h3>
+              <div className="game-image">
+                <img src={game.background_image} alt={game.background_image_additional} />
+              </div>
+              <div className="game-details">
+                <p><strong>Release Date:</strong> {game.released}</p>
+                <p><strong>Rating:</strong> {game.rating}</p>
+                <p><strong>Description:</strong> {game.description_raw}</p>
               </div>
             </div>
-          )}
 
-          <div className="links">
-            <p><strong>For More Info:</strong> <a href={game.website}>Click Here</a></p>
-            <p><strong>Add A Review:</strong> <a href={`/reviewPage/${gameId}`}>Click Here</a></p>
+            <h2 className="section-title">Screenshots:</h2>
+            <div className="screenshots">
+              {screenShots.map(screenshot => (
+                <img key={screenshot.id} src={screenshot.image} alt={`Screenshot ${screenshot.id}`} />
+              ))}
+            </div>
+
+            <div className="details-grid">
+              <div>
+                <h3>Developers:</h3>
+                <p>{game.developers && game.developers.map(dev => dev.name).join(', ')}</p>
+              </div>
+
+              <div>
+                <h3>Genres:</h3>
+                <p>{game.genres && game.genres.map(genre => genre.name).join(', ')}</p>
+              </div>
+
+              <div>
+                <h3>Available On:</h3>
+                <ul>
+                  {game.platforms && game.platforms.map(platform => (
+                    <li key={platform.platform.id}>{platform.platform.name}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h3>Platform Requirements:</h3>
+                <ul>
+                  {game.platforms && game.platforms.map(platform => {
+                    if (platform.platform.name === "PC") {
+                      return (
+                        <li key={platform.platform.id}>
+                          <h4>{platform.platform.name}</h4>
+                          <p><strong>Recommended:</strong> {platform.requirements?.recommended}</p>
+                          <p><strong>Minimum:</strong> {platform.requirements?.minimum}</p>
+                        </li>
+                      );
+                    }
+                    return null;
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            <div className="reviews">
+              <h2 className="section-title">Reviews:</h2>
+              {reviews.length > 0 ? (
+                <ul>
+                  {reviews.map(review => (
+                    <li key={review._id}>
+                      <p>{review.reviewText}</p>
+                      <div className="review-votes">
+                        <button onClick={() => handleVote(review._id, 'upvote')}>Upvote</button>
+                        <button onClick={() => handleVote(review._id, 'downvote')}>Downvote</button>
+                        <button onClick={() => handleEdit(review._id, review.reviewText)}>Edit</button>
+                        <button onClick={() => handleDelete(review._id)}>Delete</button>
+                        <span>Total Upvotes: {review.upvotes}</span>
+                        <span>Total Downvotes: {review.downvotes}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No reviews available.</p>
+              )}
+            </div>
+
+            {/* Edit Review Modal */}
+            {isModalOpen && (
+              <div className="modal">
+                <div className="modal-content">
+                  <h2>Edit Review</h2>
+                  <textarea
+                    value={newReviewText}
+                    onChange={(e) => setNewReviewText(e.target.value)}
+                    rows="5"
+                    cols="50"
+                  />
+                  <div className="modal-actions">
+                    <button onClick={handleSubmitEdit}>Submit</button>
+                    <button className='cancel-button' onClick={handleModalClose}>Cancel</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="links">
+              <p><strong>For More Info:</strong> <a href={game.website}>Click Here</a></p>
+              <p><strong>Add A Review:</strong> <a href={`/reviewPage/${gameId}`}>Click Here</a></p>
+            </div>
           </div>
-        </div>
+        )
       )}
     </>
   );

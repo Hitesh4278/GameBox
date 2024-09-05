@@ -61,7 +61,29 @@
   background-color: #000000;
 }
 
-/* Responsive Design */
+.wishlist-button {
+  background-color: #ff4757; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px; 
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.wishlist-button:hover {
+  background-color: #e84118;
+}
+
+.wishlist-message {
+  color: #2ed573; 
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+
 @media (max-width: 600px) {
   .card {
     max-width: 100%;

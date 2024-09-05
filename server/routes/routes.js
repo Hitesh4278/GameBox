@@ -9,20 +9,19 @@ const nodemailer = require('nodemailer');
 router.post('/signup', async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const salt = await bcrypt.genSalt(Number(process.env.SALT))
     const hashedPassword = await bcrypt.hash(password, salt)
-    // Create a new user
+
     const newUser = new User({
       email: email,
       password: hashedPassword,
     });
 
-    // Save the user to the database
     await newUser.save();
-    res.json({ success: true });
+    res.json({ success: true, message: "Signup  Successfull" });
   } catch (error) {
-    console.log("SignUp Error", error); // Add this line to log the specific error
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: "Some Error Occured , Try Again" });
   }
 });
 
@@ -41,10 +40,10 @@ router.post('/login', async (req, res) => {
     }
 
     if (user) {
-      return res.status(200).json({ success: true })
+      return res.status(200).json({ success: true, message: "Logged In Successfully" })
     }
     else {
-      return res.status(401).json({ success: false })
+      return res.status(401).json({ success: false, message: "Please !! Try Again" })
     }
 
   }
@@ -94,15 +93,12 @@ router.delete('/reviews/:reviewId', async (req, res) => {
       return res.status(404).json({ message: 'Review not found' });
     }
 
-    // Check if the logged-in user is the owner of the review
     if (!user._id.equals(review_user.user)) {
       return res.status(403).json({ message: 'You are not authorized to delete this review' });
     }
 
-    // Delete the review
     await Review.findByIdAndDelete(reviewId);
 
-    // Send a success response
     res.status(200).json({ message: 'Review deleted successfully' });
 
   } catch (error) {
@@ -192,10 +188,6 @@ router.post('/reviews/:id/upvote', async (req, res) => {
     review.upvotedBy.push(user._id);
     await review.save();
 
-    // Generate token with a fixed JWT secret
-    const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-
-    // Send email notification
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -219,7 +211,6 @@ router.post('/reviews/:id/upvote', async (req, res) => {
       }
     });
 
-    // Send response
     res.json({ success: true, upvotes: review.upvotes, message: "Upvote successful!" });
 
   } catch (error) {
@@ -256,10 +247,8 @@ router.post('/reviews/:id/downvote', async (req, res) => {
     review.downvotedBy.push(user._id);
     await review.save();
 
-    // Generate token with a fixed JWT secret
     const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    // Send email notification
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -283,7 +272,6 @@ router.post('/reviews/:id/downvote', async (req, res) => {
       }
     });
 
-    // Send response
     res.json({ success: true, downvotes: review.downvotes, message: "Downvote successful!" });
 
   } catch (error) {
@@ -360,7 +348,7 @@ router.get('/reset-password/:id/:token', async (req, res) => {
 
 router.post('/reset-password/:id/:token', async (req, res) => {
   const { id, token } = req.params;
-  const { password } = req.body; // Correctly extract password from the request body
+  const { password } = req.body;
 
   const user = await User.findOne({ _id: id });
   if (!user) {
@@ -370,9 +358,9 @@ router.post('/reset-password/:id/:token', async (req, res) => {
   const secret = process.env.JWT_SECRET + user.password;
 
   try {
-    const verify = jwt.verify(token, secret); // Verify the token
-    const salt = await bcrypt.genSalt(Number(process.env.SALT)); // Generate salt
-    const hashedPassword = await bcrypt.hash(password, salt); // Hash the new password
+    const verify = jwt.verify(token, secret);
+    const salt = await bcrypt.genSalt(Number(process.env.SALT));
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     await User.updateOne(
       { _id: id },
@@ -381,10 +369,74 @@ router.post('/reset-password/:id/:token', async (req, res) => {
 
     res.send("Password Updated");
   } catch (error) {
-    console.error("Error updating password:", error.message); // Log the error for debugging
-    res.status(500).send("Password Not updated"); // Use a 500 status for server errors
+    console.error("Error updating password:", error.message);
+    res.status(500).send("Password Not updated");
   }
 });
+
+
+router.get('/get-wishlist', async (req, res) => {
+  try {
+    const { email } = req.query; 
+    const user = await User.findOne({ email: email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ wishlist: user.wishlist, message: 'Your Wishlist' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
+router.post('/wishlist/add', async (req, res) => {
+  const { email, gameId } = req.body;
+
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (user.wishlist.includes(gameId)) {
+      return res.status(400).json({ message: "Item is already in the wishlist" });
+    } else {
+      user.wishlist.push(gameId);
+      await user.save();
+      res.json({ wishlist: user.wishlist, message: "Added to Wishlist" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Unable to add the item to wishlist" });
+  }
+});
+
+
+router.delete('/wishlist/remove', async (req, res) => {
+  const { email, gameId } = req.body;  
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.wishlist = user.wishlist.filter(id => id !== gameId);
+    await user.save();
+
+    res.json({ wishlist: user.wishlist, message: "Removed from Wishlist" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.post('/wishlist/check', async (req, res) => {
+  const { email, gameId } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isInWishlist = user.wishlist.includes(gameId);
+    return res.status(200).json({ isInWishlist });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 
 
 module.exports = router;

@@ -9,7 +9,6 @@ import '../../css/Login.css';
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authenticated, setAuthenticated] = useState(localStorage.getItem('authenticated') === 'true');
   const navigate = useNavigate();
 
@@ -26,9 +25,7 @@ export const Login = () => {
 
     axios(config)
       .then((result) => {
-        setIsLoggedIn(true);
-        alert("Login Successful");
-
+        alert(result.data.message);
         setAuthenticated(true);
         localStorage.setItem('authenticated', true);
         localStorage.setItem('email', email);
@@ -36,7 +33,6 @@ export const Login = () => {
       })
       .catch((error) => {
         alert("Please Enter Correct Details!!");
-        console.log(error);
       });
   };
 

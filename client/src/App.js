@@ -9,6 +9,7 @@ import { News } from './components/News/News';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ForgotPassword } from './components/ResetPassword/ForgotPassword'
 import { PasswordUpdate } from './components/ResetPassword/PasswordUpdate';
+import { WishlistPage } from './components/WishlistGames/WishlistPage';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/news" element={<News />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:id/:token" element={<PasswordUpdate />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
           </Routes>
         </Router>
       </GoogleOAuthProvider>
