@@ -151,6 +151,91 @@
     text-decoration: underline;
 }
 
+.review-votes {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  /* Button styling */
+  .review-votes button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #333;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 15px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .review-votes button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .review-votes button:active {
+    background-color: #ddd;
+  }
+
+  /* Modal Styles */
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .modal-actions button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-left: 10px;
+  }
+  
+  .modal-actions button:hover {
+    background-color: #0056b3;
+  }
+  
+  .modal-actions button:active {
+    transform: scale(0.98);
+  }
+  
+  .modal-actions .cancel-button {
+    background-color: #6c757d;
+  }
+  
+  .modal-actions .cancel-button:hover {
+    background-color: #5a6268;
+  }
+  
 /* Responsive Styling */
 @media (max-width: 768px) {
     .details-grid {

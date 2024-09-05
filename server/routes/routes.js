@@ -79,6 +79,81 @@ router.post('/reviewPage/:gameId', async (req, res) => {
   }
 });
 
+router.delete('/reviews/:reviewId', async (req, res) => {
+  const { reviewId } = req.params;
+  const { email } = req.query; // Accessing email from query parameters
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const review_user = await Review.findById(reviewId);
+    if (!review_user) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+
+    // Check if the logged-in user is the owner of the review
+    if (!user._id.equals(review_user.user)) {
+      return res.status(403).json({ message: 'You are not authorized to delete this review' });
+    }
+
+    // Delete the review
+    await Review.findByIdAndDelete(reviewId);
+
+    // Send a success response
+    res.status(200).json({ message: 'Review deleted successfully' });
+
+  } catch (error) {
+    console.error('Error deleting review..........', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+router.put('/reviews/:reviewId', async (req, res) => {
+  const { reviewId } = req.params;
+  const { reviewText, email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const review_user = await Review.findById(reviewId);
+    if (!review_user) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+
+    if (!user._id.equals(review_user.user)) {
+      return res.status(403).json({ message: 'You are not authorized to delete this review' });
+    }
+
+    const updatedReview = await Review.findByIdAndUpdate(
+      reviewId,
+      {
+        $set: {
+          reviewText: reviewText,
+        }
+      },
+      { new: true }
+    );
+
+    if (!updatedReview) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+    res.status(200).json(updatedReview);
+
+  } catch (error) {
+    console.error('Error updating review:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
 router.get('/reviews/:gameId', async (req, res) => {
   const { gameId } = req.params;
 
@@ -90,6 +165,133 @@ router.get('/reviews/:gameId', async (req, res) => {
     res.status(500).json({ message: 'Error fetching reviews' });
   }
 });
+
+router.post('/reviews/:id/upvote', async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) {
+      return res.status(404).json({ success: false, message: 'Review not found.' });
+    }
+
+    const { email } = req.body;
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    if (review.upvotedBy.includes(user._id)) {
+      return res.status(400).json({ success: false, message: 'You have already upvoted this review.' });
+    }
+
+    if (review.downvotedBy.includes(user._id)) {
+      review.downvotes -= 1;
+      review.downvotedBy.pull(user._id);
+    }
+
+    review.upvotes += 1;
+    review.upvotedBy.push(user._id);
+    await review.save();
+
+    // Generate token with a fixed JWT secret
+    const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    // Send email notification
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    var mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Review Upvoted',
+      text: "Your review has been upvoted!",
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.error('Error sending email:', error);
+      } else {
+        console.log('Email sent successfully:', info.response);
+      }
+    });
+
+    // Send response
+    res.json({ success: true, upvotes: review.upvotes, message: "Upvote successful!" });
+
+  } catch (error) {
+    console.error('Error in upvote route:', error);
+    res.status(500).json({ success: false, error: 'Voting Error' });
+  }
+});
+
+
+
+router.post('/reviews/:id/downvote', async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) {
+      return res.status(404).json({ success: false, message: 'Review not found.' });
+    }
+
+    const { email } = req.body;
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    if (review.downvotedBy.includes(user._id)) {
+      return res.status(400).json({ success: false, message: 'You have already downvoted this review.' });
+    }
+
+    if (review.upvotedBy.includes(user._id)) {
+      review.upvotes -= 1;
+      review.upvotedBy.pull(user._id);
+    }
+
+    review.downvotes += 1;
+    review.downvotedBy.push(user._id);
+    await review.save();
+
+    // Generate token with a fixed JWT secret
+    const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    // Send email notification
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    var mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Review Downvoted',
+      text: "Your review has been downvoted!",
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.error('Error sending email:', error);
+      } else {
+        console.log('Email sent successfully:', info.response);
+      }
+    });
+
+    // Send response
+    res.json({ success: true, downvotes: review.downvotes, message: "Downvote successful!" });
+
+  } catch (error) {
+    console.error('Error in downvote route:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
 
 
 router.post('/forgot-password', async (req, res) => {
