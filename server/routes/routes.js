@@ -292,7 +292,7 @@ router.post('/forgot-password', async (req, res) => {
 
     const secret = process.env.JWT_SECRET + user.password;
     const token = jwt.sign({ email: user.email, id: user._id }, secret, { expiresIn: '1d' });
-    const link = `http://localhost:8000/reset-password/${user._id}/${token}`;
+    const link = process.env.BACKEND + `reset-password/${user._id}/${token}`;
 
     var transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -338,7 +338,7 @@ router.get('/reset-password/:id/:token', async (req, res) => {
   try {
     const verify = jwt.verify(token, secret);
     if (verify) {
-      return res.redirect(`http://localhost:3000/reset-password/${id}/${token}`);
+      return res.redirect(process.env.FRONTEND + `reset-password/${id}/${token}`);
     }
   } catch (error) {
     return res.status(400).send("Not Verified");
@@ -377,7 +377,7 @@ router.post('/reset-password/:id/:token', async (req, res) => {
 
 router.get('/get-wishlist', async (req, res) => {
   try {
-    const { email } = req.query; 
+    const { email } = req.query;
     const user = await User.findOne({ email: email });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -410,7 +410,7 @@ router.post('/wishlist/add', async (req, res) => {
 
 
 router.delete('/wishlist/remove', async (req, res) => {
-  const { email, gameId } = req.body;  
+  const { email, gameId } = req.body;
   try {
     const user = await User.findOne({ email: email });
     if (!user) return res.status(404).json({ message: 'User not found' });

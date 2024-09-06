@@ -13,14 +13,13 @@ export const WishlistPage = () => {
     const fetchWishlist = async () => {
       const email = localStorage.getItem('email');
       try {
-        const response = await axios.get('http://localhost:8000/get-wishlist', {
+        const response = await axios.get(process.env.REACT_APP_BACKEND_URL + 'get-wishlist', {
           params: { email: email }
         });
 
         const wishlistGameIds = response.data.wishlist;
-
         const gameDetailsPromises = wishlistGameIds.map(async (gameId) => {
-          const gameResponse = await axios.get(`https://api.rawg.io/api/games/${gameId}?key=${apiKey}`);
+          const gameResponse = await axios.get(process.env.REACT_APP_RAWG_URL + `games/${gameId}?key=${apiKey}`);
           return gameResponse.data;
         });
 
@@ -39,7 +38,7 @@ export const WishlistPage = () => {
   const handleRemove = async (gameId) => {
     const email = localStorage.getItem('email');
     try {
-      await axios.delete('http://localhost:8000/wishlist/remove', {
+      await axios.delete(process.env.REACT_APP_BACKEND_URL + 'wishlist/remove', {
         data: { email: email, gameId: String(gameId) } 
       });
       

@@ -8,14 +8,14 @@ export const News = () => {
     const [news, setNews] = useState([]);
     const [query, setQuery] = useState('games');
     const [loading, setLoading] = useState(false); // Add loading state
+    const apiKey = process.env.REACT_APP_NEWS_API; // Fetch API key from environment variables
 
     const getNews = useCallback(() => {
         setLoading(true); // Start loading
-        const newsUrl = `https://newsapi.org/v2/everything?q=${query}&apiKey=8329b6655aa74b9f86cbab15afb4a63d`;
+        const newsUrl = `https://newsapi.org/v2/everything?q=${query}&apiKey=${apiKey}`;
         axios
             .get(newsUrl)
             .then(response => {
-                console.log(response);
                 setNews(response.data.articles);
             })
             .catch(error => {

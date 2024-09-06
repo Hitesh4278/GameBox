@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../css/NavBar.css';
 
-export const NavBar = () => {
+export const NavBar = ({ setIsLoggedIn }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ export const NavBar = () => {
     localStorage.removeItem('authenticated');
     localStorage.removeItem('email');
     setAuthenticated(false);
+    setIsLoggedIn(false)
     setEmail('');
     alert('Logged Out');
     navigate('/');

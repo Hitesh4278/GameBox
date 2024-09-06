@@ -21,7 +21,7 @@ export const Home = () => {
   const getAllGames = async (page = 1) => {
     try {
       setLoading(true); // Start loading
-      const response = await axios.get(`https://api.rawg.io/api/games?key=${apiKey}&page=${page}`);
+      const response = await axios.get(process.env.REACT_APP_RAWG_URL+`games?key=${apiKey}&page=${page}`);
       setGames(response.data.results);
       setTotalPages(Math.ceil(response.data.count / 20));
     } catch (error) {
@@ -34,7 +34,7 @@ export const Home = () => {
   const getSearchedGames = async (page = 1) => {
     try {
       setLoading(true); // Start loading
-      const response = await axios.get(`https://api.rawg.io/api/games?key=${apiKey}&search=${search}&page=${page}`);
+      const response = await axios.get(process.env.REACT_APP_RAWG_URL + `games?key=${apiKey}&search=${search}&page=${page}`);
       setGames(response.data.results);
       setTotalPages(Math.ceil(response.data.count / 20)); 
     } catch (error) {

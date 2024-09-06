@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { NavBar } from '../Navbar/NavBar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -19,9 +19,67 @@ export const GamePage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('authenticated') === 'true');
   const [showAuthRequired, setShowAuthRequired] = useState(false);
 
-  const url = `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
-  const screenShotUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${apiKey}`;
-  const reviewsUrl = `http://localhost:8000/reviews/${gameId}`;
+  const url = process.env.REACT_APP_RAWG_URL + `games/${gameId}?key=${apiKey}`;
+  const screenShotUrl = process.env.REACT_APP_RAWG_URL + `games/${gameId}/screenshots?key=${apiKey}`;
+  const reviewsUrl = process.env.REACT_APP_BACKEND_URL + `reviews/${gameId}`;
+
+  const fetchReviews = useCallback(async () => {
+    try {
+      const reviewsData = await axios.get(reviewsUrl);
+      setReviews(reviewsData.data);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  }, [reviewsUrl]);
+
+  const handleVote = useCallback(async (reviewId, type) => {
+    try {
+      await axios.post(process.env.REACT_APP_BACKEND_URL + `reviews/${reviewId}/${type}`, { email });
+      await fetchReviews(); // Refetch reviews after voting
+
+      alert(`Successfully ${type}d`);
+    } catch (error) {
+      alert(`Already ${type}d`);
+      console.error(`Error ${type}ing:`, error);
+    }
+  }, [email, fetchReviews]);
+
+  const handleDelete = useCallback(async (reviewId) => {
+    try {
+      await axios.delete(process.env.REACT_APP_BACKEND_URL + `reviews/${reviewId}?email=${email}`);
+      await fetchReviews(); // Refetch reviews after deleting
+      alert('Review deleted successfully');
+    } catch (error) {
+      console.error('Error deleting review:', error);
+      alert('Failed to delete the review');
+    }
+  }, [email, fetchReviews]);
+
+  const handleEdit = useCallback((reviewId, currentText) => {
+    setCurrentReviewId(reviewId);
+    setNewReviewText(currentText);
+    setIsModalOpen(true);
+  }, []);
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSubmitEdit = async () => {
+    try {
+      await axios.put(process.env.REACT_APP_BACKEND_URL + `reviews/${currentReviewId}`, {
+        email,
+        reviewText: newReviewText
+      });
+      await fetchReviews(); // Refetch reviews after editing
+
+      setIsModalOpen(false);
+      alert('Review updated successfully');
+    } catch (error) {
+      console.error('Error updating review:', error);
+      alert('Failed to update the review');
+    }
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -31,15 +89,14 @@ export const GamePage = () => {
 
     const fetchData = async () => {
       try {
-        const [gameData, screenShotData, reviewsData] = await Promise.all([
+        const [gameData, screenShotData] = await Promise.all([
           axios.get(url),
-          axios.get(screenShotUrl),
-          axios.get(reviewsUrl)
+          axios.get(screenShotUrl)
         ]);
 
         setGame(gameData.data);
         setScreenShots(screenShotData.data.results);
-        setReviews(reviewsData.data);
+        await fetchReviews(); // Fetch reviews initially
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -47,79 +104,11 @@ export const GamePage = () => {
     };
 
     fetchData();
-  }, [gameId, url, screenShotUrl, reviewsUrl, isAuthenticated]);
-
-  const handleVote = async (reviewId, type) => {
-    try {
-      await axios.post(`http://localhost:8000/reviews/${reviewId}/${type}`, { email });
-
-      setReviews(reviews.map(review => {
-        if (review._id === reviewId) {
-          const updatedReview = { ...review };
-          if (type === 'upvote') {
-            updatedReview.upvotes += 1;
-          } else if (type === 'downvote') {
-            updatedReview.downvotes += 1;
-          }
-          return updatedReview;
-        }
-        return review;
-      }));
-
-      alert(`Successfully ${type}d`);
-    } catch (error) {
-      alert(`Already ${type}d`);
-      console.error(`Error ${type}ing:`, error);
-    }
-  };
-
-  const handleDelete = async (reviewId) => {
-    try {
-      await axios.delete(`http://localhost:8000/reviews/${reviewId}?email=${email}`);
-      setReviews(reviews.filter(review => review._id !== reviewId));
-      alert('Review deleted successfully');
-    } catch (error) {
-      console.error('Error deleting review:', error);
-      alert('Failed to delete the review');
-    }
-  };
-
-  const handleEdit = (reviewId, currentText) => {
-    setCurrentReviewId(reviewId);
-    setNewReviewText(currentText);
-    setIsModalOpen(true); 
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleSubmitEdit = async () => {
-    try {
-      await axios.put(`http://localhost:8000/reviews/${currentReviewId}`, {
-        email,
-        reviewText: newReviewText
-      });
-
-      setReviews(reviews.map(review => {
-        if (review._id === currentReviewId) {
-          return { ...review, reviewText: newReviewText };
-        }
-        return review;
-      }));
-
-      setIsModalOpen(false); 
-      alert('Review updated successfully');
-    } catch (error) {
-      console.error('Error updating review:', error);
-      alert('Failed to update the review');
-    }
-  };
-
+  }, [gameId, url, screenShotUrl, isAuthenticated, fetchReviews]);
 
   return (
     <>
-      <NavBar/>
+      <NavBar />
       {showAuthRequired && (
         <div className="modal-overlay">
           <div className="auth-required-popup">

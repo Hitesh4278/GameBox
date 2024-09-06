@@ -30,11 +30,11 @@ const css = {
     height: "100%",
   },
   button: {
-    backgroundColor: "#FFFFFF", // White background
-    borderColor: "#FFFFFF", // White border
-    color: "#000000", // Black text
+    backgroundColor: "#FFFFFF",
+    borderColor: "#FFFFFF",
+    color: "#000000",
     fontFamily: "'Press Start 2P', cursive",
-    boxShadow: "0px 0px 10px 2px rgba(255, 255, 255, 0.8)", // White glow
+    boxShadow: "0px 0px 10px 2px rgba(255, 255, 255, 0.8)",
     textShadow: "1px 1px #000", 
     transition: "transform 0.2s",
   },
@@ -45,6 +45,12 @@ const css = {
 
 export default function LandingPage() {
   const [hovered, setHovered] = useState(null);
+
+  const handleGuestLogin = () => {
+    localStorage.setItem('authenticated', 'true');
+    localStorage.setItem('email', 'guest@gmail.com');
+    window.location.href = '/';
+  };
 
   return (
     <Container fluid style={css.container} className="mt-0 position-absolute w-100">
@@ -97,6 +103,21 @@ export default function LandingPage() {
                 onMouseLeave={() => setHovered(null)}
               >
                 Signup
+              </Button>
+            </Col>
+            <Col xs="auto">
+              <Button
+                variant="outline-light"
+                size="lg"
+                style={{ 
+                  ...css.button, 
+                  ...(hovered === "guest" && css.buttonHover) 
+                }}
+                onClick={handleGuestLogin}
+                onMouseEnter={() => setHovered("guest")}
+                onMouseLeave={() => setHovered(null)}
+              >
+                Guest
               </Button>
             </Col>
           </Row>

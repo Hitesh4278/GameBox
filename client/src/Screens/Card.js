@@ -12,7 +12,7 @@ export const Card = ({ game }) => {
     const email = localStorage.getItem('email');
     const checkWishlist = async () => {
       try {
-        const response = await axios.post('http://localhost:8000/wishlist/check', {
+        const response = await axios.post(process.env.REACT_APP_BACKEND_URL + 'wishlist/check', {
           email: email,
           gameId: GameId
         });
@@ -28,7 +28,7 @@ export const Card = ({ game }) => {
   const addToWishlist = async () => {
     const email = localStorage.getItem('email');
     try {
-      const response = await axios.post('http://localhost:8000/wishlist/add', {
+      const response = await axios.post(process.env.REACT_APP_BACKEND_URL + 'wishlist/add', {
         email: email,
         gameId: GameId
       });
@@ -50,7 +50,7 @@ export const Card = ({ game }) => {
   const removeFromWishlist = async () => {
     const email = localStorage.getItem('email');
     try {
-      const response = await axios.delete('http://localhost:8000/wishlist/remove', {
+      const response = await axios.delete( process.env.REACT_APP_BACKEND_URL + 'wishlist/remove', {
         data: { email: email, gameId: String(GameId) }
       });
 

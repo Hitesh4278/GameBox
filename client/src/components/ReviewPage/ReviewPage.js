@@ -25,7 +25,7 @@ export const ReviewPage = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:8000/reviewPage/${gameId}`, {
+      const response = await axios.post(process.env.REACT_APP_BACKEND_URL + `reviewPage/${gameId}`, {
         reviewText: review,
         email: email,
         gameId: gameId,

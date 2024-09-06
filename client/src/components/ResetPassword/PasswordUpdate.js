@@ -12,7 +12,7 @@ export const PasswordUpdate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8000/reset-password/${id}/${token}`, { password });
+      const response = await axios.post(process.env.REACT_APP_BACKEND_URL + `reset-password/${id}/${token}`, { password });
       setMessage('Password updated successfully!');
       setTimeout(() => navigate('/login'), 2000); // Slight delay before navigating
     } catch (error) {
