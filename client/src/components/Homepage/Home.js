@@ -17,11 +17,11 @@ export const Home = () => {
   const [currentPageBlock, setCurrentPageBlock] = useState(0); // Track the block of 10 pages
 
   const pagesPerBlock = 10; // Define how many pages per block
-  
+
   const getAllGames = async (page = 1) => {
     try {
       setLoading(true); // Start loading
-      const response = await axios.get(process.env.REACT_APP_RAWG_URL+`games?key=${apiKey}&page=${page}`);
+      const response = await axios.get(`${process.env.REACT_APP_RAWG_URL}games?key=${apiKey}&page=${page}`);
       setGames(response.data.results);
       setTotalPages(Math.ceil(response.data.count / 20));
     } catch (error) {
@@ -31,10 +31,11 @@ export const Home = () => {
     }
   };
 
+  // Fetch searched games function
   const getSearchedGames = async (page = 1) => {
     try {
       setLoading(true); // Start loading
-      const response = await axios.get(process.env.REACT_APP_RAWG_URL + `games?key=${apiKey}&search=${search}&page=${page}`);
+      const response = await axios.get(`${process.env.REACT_APP_RAWG_URL}games?key=${apiKey}&search=${search}&page=${page}`);
       setGames(response.data.results);
       setTotalPages(Math.ceil(response.data.count / 20)); 
     } catch (error) {
@@ -43,19 +44,6 @@ export const Home = () => {
       setLoading(false); // Stop loading
     }
   };
-
-  useEffect(() => {
-    if (search === '') {
-      getAllGames(currentPage);
-    } else {
-      getSearchedGames(currentPage);
-    }
-  }, [search, currentPage]);
-
-  useEffect(() => {
-    const authStatus = !!localStorage.getItem('authenticated');
-    setIsLoggedIn(authStatus);
-  }, []);
 
   // Handle page change
   const handlePageChange = (newPage) => {
@@ -77,6 +65,19 @@ export const Home = () => {
 
   const startPage = currentPageBlock * pagesPerBlock + 1;
   const endPage = Math.min(startPage + pagesPerBlock - 1, totalPages);
+
+  useEffect(() => {
+    if (search === '') {
+      getAllGames(currentPage);
+    } else {
+      getSearchedGames(currentPage);
+    }
+  }, [search, currentPage] ); 
+
+  useEffect(() => {
+    const authStatus = !!localStorage.getItem('authenticated');
+    setIsLoggedIn(authStatus);
+  }, []);
 
   return (
     <>

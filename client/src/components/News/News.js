@@ -1,18 +1,32 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { NavBar } from '../Navbar/NavBar';
-
 import '../../css/News.css';
 
 export const News = () => {
     const [news, setNews] = useState([]);
-    const [query, setQuery] = useState('games');
-    const [loading, setLoading] = useState(false); // Add loading state
-    const apiKey = process.env.REACT_APP_NEWS_API; // Fetch API key from environment variables
+    const [query, setQuery] = useState('pc games');
+    const [loading, setLoading] = useState(false); 
+    const [fromDate, setFromDate] = useState(getYesterdayDate());
+    const [toDate, setToDate] = useState(getYesterdayDate()); 
+    const apiKey = process.env.REACT_APP_NEWS_API;
+    const isInitialMount = useRef(true); // Track initial mount
+
+    function getYesterdayDate() {
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
+        return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    }
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        }
+    }, []);
 
     const getNews = useCallback(() => {
-        setLoading(true); // Start loading
-        const newsUrl = `https://newsapi.org/v2/everything?q=${query}&apiKey=${apiKey}`;
+        setLoading(true); 
+        const newsUrl = `https://newsapi.org/v2/everything?q=${query}&from=${fromDate}&to=${toDate}&sortBy=publishedAt&apiKey=${apiKey}`;
         axios
             .get(newsUrl)
             .then(response => {
@@ -22,12 +36,12 @@ export const News = () => {
                 console.error(error);
             })
             .finally(() => {
-                setLoading(false); // End loading
+                setLoading(false); 
             });
-    }, [query]);
+    }, [query, fromDate, toDate, apiKey]);
 
     useEffect(() => {
-        getNews();
+        getNews();  
     }, [getNews]);
 
     const handleSearch = () => {
@@ -47,9 +61,25 @@ export const News = () => {
                         placeholder="Search for news..."
                         className="search-input"
                     />
+                    <div className="date-picker-container">
+                        <label>From: </label>
+                        <input
+                            type="date"
+                            value={fromDate}
+                            onChange={e => setFromDate(e.target.value)}
+                            className="date-input"
+                        />
+                        <label>To: </label>
+                        <input
+                            type="date"
+                            value={toDate}
+                            onChange={e => setToDate(e.target.value)}
+                            className="date-input"
+                        />
+                    </div>
                     <button onClick={handleSearch} className="search-button">Search</button>
                 </div>
-                {loading ? ( // Display loading spinner or message
+                {loading ? ( 
                     <div className="loading-container">
                         <p>Loading...</p>
                     </div>

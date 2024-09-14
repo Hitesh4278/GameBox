@@ -46,12 +46,6 @@ const css = {
 export default function LandingPage() {
   const [hovered, setHovered] = useState(null);
 
-  const handleGuestLogin = () => {
-    localStorage.setItem('authenticated', 'true');
-    localStorage.setItem('email', 'guest@gmail.com');
-    window.location.href = '/';
-  };
-
   return (
     <Container fluid style={css.container} className="mt-0 position-absolute w-100">
       <Row className="vh-100" style={css.row}>
@@ -103,21 +97,6 @@ export default function LandingPage() {
                 onMouseLeave={() => setHovered(null)}
               >
                 Signup
-              </Button>
-            </Col>
-            <Col xs="auto">
-              <Button
-                variant="outline-light"
-                size="lg"
-                style={{ 
-                  ...css.button, 
-                  ...(hovered === "guest" && css.buttonHover) 
-                }}
-                onClick={handleGuestLogin}
-                onMouseEnter={() => setHovered("guest")}
-                onMouseLeave={() => setHovered(null)}
-              >
-                Guest
               </Button>
             </Col>
           </Row>

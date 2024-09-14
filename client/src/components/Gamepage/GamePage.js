@@ -16,7 +16,7 @@ export const GamePage = () => {
   const [newReviewText, setNewReviewText] = useState('');
   const { gameId } = useParams();
   const email = localStorage.getItem('email');
-  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('authenticated') === 'true');
+  const isAuthenticated =  localStorage.getItem('authenticated') === 'true'
   const [showAuthRequired, setShowAuthRequired] = useState(false);
 
   const url = process.env.REACT_APP_RAWG_URL + `games/${gameId}?key=${apiKey}`;

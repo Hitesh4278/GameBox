@@ -18,7 +18,7 @@ export const ForgotPassword = () => {
 
     return (
         <div className="forgot-password-container">
-            <h2>Reset Password</h2>
+            <h2>Forgot Password</h2>
             <form className="forgot-password-form" onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="email">Email:</label>

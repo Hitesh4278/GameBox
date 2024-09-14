@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../css/Wishlist.css';
+import { NavBar } from '../Navbar/NavBar';
 
 export const WishlistPage = () => {
   const [wishlistGames, setWishlistGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const apiKey = process.env.REACT_APP_RAWG_API;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -47,37 +49,44 @@ export const WishlistPage = () => {
       setError('Error removing game from wishlist');
     }
   };
-  
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
 
   return (
-    <div className="wishlist-page">
-      <h2>Your Wishlist</h2>
-      {wishlistGames.length > 0 ? (
-        <div className="wishlist-grid">
-          {wishlistGames.map((game) => (
-            <div key={game.id} className="wishlist-card">
-              <Link to={`/gamepage/${game.id}`}>
-                <div className="wishlist-card-content">
-                  <img src={game.background_image} alt={game.name} className="wishlist-game-image" />
-                  <h4>{game.name}</h4>
-                  <p>Rating: {game.rating}</p>
-                  <p>Released: {game.released}</p>
+    <>
+      <NavBar />
+      <div className="wishlist-page">
+        {loading ? (
+          <p className="loading-message">Loading...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : wishlistGames.length > 0 ? (
+          <>
+            <div className="wishlist-grid">
+              {wishlistGames.map((game) => (
+                <div key={game.id} className="wishlist-card">
+                  <Link to={`/gamepage/${game.id}`}>
+                    <div className="wishlist-card-content">
+                      <img src={game.background_image} alt={game.name} className="wishlist-game-image" />
+                      <h4>{game.name}</h4>
+                      <p>Rating: {game.rating}</p>
+                      <p>Released: {game.released}</p>
+                    </div>
+                  </Link>
+                  <button className="remove-btn" onClick={() => handleRemove(game.id)}>
+                    Remove
+                  </button>
                 </div>
-              </Link>
-              <button
-                className="remove-btn"
-                onClick={() => handleRemove(game.id)}
-              >
-                Remove
-              </button>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : (
-        <p>No games in your wishlist</p>
-      )}
-    </div>
+       
+            <button className="back-btn" onClick={() => navigate(-1)}>Back</button>
+          </>
+        ) : (
+          <>
+            <p>No games in your wishlist</p>
+            <button className="back-btn" onClick={() => navigate(-1)}>Back</button>
+          </>
+        )}
+      </div>
+    </>
   );
 };

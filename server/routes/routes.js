@@ -397,14 +397,14 @@ router.post('/wishlist/add', async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     if (user.wishlist.includes(gameId)) {
-      return res.status(400).json({ message: "Item is already in the wishlist" });
+      return res.status(400).json({ message: "Item is already in the Favourites" });
     } else {
       user.wishlist.push(gameId);
       await user.save();
-      res.json({ wishlist: user.wishlist, message: "Added to Wishlist" });
+      res.json({ wishlist: user.wishlist, message: "Added to  Favourites" });
     }
   } catch (err) {
-    res.status(500).json({ message: "Unable to add the item to wishlist" });
+    res.status(500).json({ message: "Unable to add the item to Favourites" });
   }
 });
 
@@ -418,7 +418,7 @@ router.delete('/wishlist/remove', async (req, res) => {
     user.wishlist = user.wishlist.filter(id => id !== gameId);
     await user.save();
 
-    res.json({ wishlist: user.wishlist, message: "Removed from Wishlist" });
+    res.json({ wishlist: user.wishlist, message: "Removed from Favourites" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

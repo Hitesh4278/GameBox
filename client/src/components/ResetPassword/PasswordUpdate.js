@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../../css/PasswordUpdate.css'; 
+import '../../css/PasswordUpdate.css';
 
 export const PasswordUpdate = () => {
   const [password, setPassword] = useState('');
@@ -13,8 +13,11 @@ export const PasswordUpdate = () => {
     e.preventDefault();
     try {
       const response = await axios.post(process.env.REACT_APP_BACKEND_URL + `reset-password/${id}/${token}`, { password });
-      setMessage('Password updated successfully!');
-      setTimeout(() => navigate('/login'), 2000); // Slight delay before navigating
+      if (response) {
+        setMessage('Password updated successfully!');
+        setTimeout(() => navigate('/login'), 2000); // Slight delay before navigating
+
+      }
     } catch (error) {
       setMessage('An error occurred while updating the password. Please try again.');
     }
