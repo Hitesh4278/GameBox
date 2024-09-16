@@ -52,6 +52,43 @@ router.post('/login', async (req, res) => {
   }
 })
 
+router.post('/login-google', async (req, res) => {
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    let user = await User.findOne({ email: email });
+
+    if (user) {
+      const passwordCompare = await bcrypt.compare(password, user.password)
+
+      if (!passwordCompare) {
+        return res.status(400).json({ errors: "Incorrect password" });
+      }
+
+      if (user) {
+        return res.status(200).json({ success: true, message: "Logged In Successfully" })
+      }
+    }
+    else {
+      const salt = await bcrypt.genSalt(Number(process.env.SALT))
+      const hashedPassword = await bcrypt.hash(password, salt)
+
+      const newUser = new User({
+        email: email,
+        password: hashedPassword,
+      });
+
+      await newUser.save();
+      res.json({ success: true, message: "Signup  Successfull" });
+    }
+
+  }
+  catch (error) {
+    res.json('Error: ', error.message);
+  }
+})
+
 router.post('/reviewPage/:gameId', async (req, res) => {
   try {
     const { email, reviewText, gameId } = req.body;

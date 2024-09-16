@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '../Navbar/NavBar';
-import { GoogleSignup } from './GoogleSignup';
 import { Link } from 'react-router-dom';
 
 
@@ -18,7 +17,7 @@ export const SignUp = () => {
 
     const config = {
       method: "post",
-      url: process.env.REACT_APP_BACKEND_URL + '/signup',
+      url: process.env.REACT_APP_BACKEND_URL + 'signup',
       data: {
         email,
         password,
@@ -60,9 +59,6 @@ export const SignUp = () => {
             </Link>
           </div>
         </form>
-        <div className="google-signup-container">
-          <GoogleSignup />
-        </div>
       </div>
     </div>
   );

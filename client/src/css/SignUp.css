@@ -70,15 +70,6 @@ body {
   background-color: #0056b3;
 }
 
-.google-signup-container {
-  margin-top: 20px;
-  text-align: center;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
 
 /* Responsive Styles */
 @media (max-width: 500px) {

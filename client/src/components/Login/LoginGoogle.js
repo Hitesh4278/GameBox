@@ -13,7 +13,7 @@ export const LoginGoogle = () => {
         try {
             const config = {
                 method: "post",
-                url: process.env.REACT_APP_BACKEND_URL + "login",
+                url: process.env.REACT_APP_BACKEND_URL + "login-google",
                 data: {
                     email: email,
                     password: password,
